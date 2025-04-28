@@ -1,7 +1,8 @@
 package ui.user;
 
 import database.DBconnection;
-
+import javax.swing.*;
+import java.awt.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,49 +11,66 @@ import java.sql.SQLException;
 public class AccountPage {
 
     public static void goToAccount(String username) {
+        // Create frame for Account details page
+        JFrame frame = new JFrame("Account Details - WellCure");
+        frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Close only the current window
+        frame.setLayout(new BorderLayout());
 
-        System.out.println("Fetching Account Details for: " + username);
+        // Title Label
+        JLabel titleLabel = new JLabel("Account Details for: " + username, JLabel.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        frame.add(titleLabel, BorderLayout.NORTH);
 
-        String sql = "SELECT name, username, address FROM users WHERE username=?"; // Select specific columns
+        // Account details container
+        JPanel detailsPanel = new JPanel();
+        detailsPanel.setLayout(new GridLayout(3, 1, 10, 10));
 
-        // Use try-with-resources for automatic closing
+        // Fetch user details from DB
+        String sql = "SELECT name, username, address FROM users WHERE username=?";
         try (Connection con = DBconnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             if (con == null) {
-                System.err.println("Failed to get database connection.");
-                System.out.println("Unable to load details - Database connection error.");
-                return; // Exit if no connection
+                JOptionPane.showMessageDialog(frame, "Database connection error. Please try again later.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
             }
 
             ps.setString(1, username); // Set the username parameter
 
-            try (ResultSet rs = ps.executeQuery()) { // Also manage ResultSet with try-with-resources
-
-                // *** FIX: Check if a row exists and move cursor ***
+            try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    System.out.println("--- Account Details ---");
-                    // Now it's safe to get data because rs.next() was true
-                    System.out.println("Name: " + rs.getString("name"));
-                    System.out.println("Username: " + rs.getString("username")); // Corrected label
-                    System.out.println("Address: " + rs.getString("address"));   // Corrected label
+                    detailsPanel.add(new JLabel("Name: " + rs.getString("name")));
+                    detailsPanel.add(new JLabel("Username: " + rs.getString("username")));
+                    detailsPanel.add(new JLabel("Address: " + rs.getString("address")));
                 } else {
-                    // Handle the case where the username was not found
-                    System.out.println("No account details found for username: " + username);
+                    JOptionPane.showMessageDialog(frame, "No account details found for username: " + username, "No Data", JOptionPane.WARNING_MESSAGE);
+                    frame.dispose();
+                    return;
                 }
-
-            } // ResultSet rs is automatically closed here
+            }
 
         } catch (SQLException e) {
-            System.err.println("SQL Error fetching account details: " + e.getMessage());
-            e.printStackTrace(); // Log the full error for debugging
-            System.out.println("Unable to load details due to a database error.");
+            JOptionPane.showMessageDialog(frame, "SQL Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace(); // Log for debugging purposes
         } catch (Exception e) {
-            // Catch any other unexpected errors
-            System.err.println("Unexpected error fetching account details: " + e.getMessage());
+            JOptionPane.showMessageDialog(frame, "Unexpected error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
-            System.out.println("Unable to load details due to an unexpected error.");
         }
-        // Connection con and PreparedStatement ps are automatically closed here
+
+        // Add the details panel to the frame
+        frame.add(detailsPanel, BorderLayout.CENTER);
+
+        // Back Button
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e -> {
+            frame.dispose(); // Close the current window
+            new UserHomePage(username).showUserHomePage(); // Go back to User Home Page
+        });
+        frame.add(backButton, BorderLayout.SOUTH);
+
+        // Show frame
+        frame.setLocationRelativeTo(null); // Center the window on the screen
+        frame.setVisible(true);
     }
 }

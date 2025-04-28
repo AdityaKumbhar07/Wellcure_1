@@ -2,8 +2,7 @@
 create database wellcure;
 use wellcure;
 
-drop table medicine;
-delete *from users where user_name = a;
+
 
 -- creat user table
 create table users(
@@ -49,3 +48,6 @@ VALUES ('Paracetamol', 'tablet', 20.5, 100);
 
 INSERT INTO medicines (medicine_name, type, price, stock)
 VALUES ('Azytramycine', 'tablet', 40, 150);
+
+drop table medicine;
+delete *from users where user_name = a;

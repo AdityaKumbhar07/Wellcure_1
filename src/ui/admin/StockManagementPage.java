@@ -1,19 +1,17 @@
-package ui.admin; // Or wherever this page belongs
+package ui.admin;
 
-import database.DBconnection; // Assuming you have this for DB connection
+import database.DBconnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Scanner;
 
 public class StockManagementPage {
 
-    // Inner class to represent Medicine data, kept simple
     static class Medicine {
         int id;
         String name;
@@ -30,174 +28,142 @@ public class StockManagementPage {
             this.stock = stock;
         }
 
-        // Getters (needed for display)
+        // Getters and Setters
         public int getId() { return id; }
         public String getName() { return name; }
         public String getType() { return type; }
         public double getPrice() { return price; }
         public int getStock() { return stock; }
 
-        // Setters (needed for update)
         public void setPrice(double price) { this.price = price; }
         public void setStock(int stock) { this.stock = stock; }
-        // Setters for name/type might be needed if you allow updating those too
 
         @Override
         public String toString() {
-            // Simple string representation for display
             return String.format("ID: %-4d | Name: %-20s | Type: %-25s | Price: %-8.2f | Stock: %d",
                     id, name, type, price, stock);
         }
     }
 
-    // --- Main Menu for Stock Management ---
-    public static void showStockMenu() {
-        try (Scanner scanner = new Scanner(System.in)) {
-            while (true) {
-                System.out.println("\n--- Stock Management ---");
-                System.out.println("1. View All Medicine Stock");
-                System.out.println("2. Update Medicine Stock/Price");
-                System.out.println("3. Go Back");
-                System.out.print("Enter your choice: ");
+    public static void showStockManagementPage(JFrame parentFrame) {
+        JFrame stockFrame = new JFrame("Stock Management");
+        stockFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        stockFrame.setSize(600, 400);
+        stockFrame.setLayout(new BorderLayout());
 
-                int choice = -1;
-                try {
-                    choice = scanner.nextInt();
-                } catch (InputMismatchException e) {
-                    System.out.println("Invalid input. Please enter a number.");
-                    scanner.next(); // Consume the invalid input
-                    continue;
-                } finally {
-                    if (scanner.hasNextLine()) scanner.nextLine(); // Consume newline always
-                }
+        // Panel to hold buttons
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(2, 1, 10, 10));
 
+        JButton viewButton = new JButton("View All Medicines");
+        JButton updateButton = new JButton("Update Medicine Stock/Price");
 
-                switch (choice) {
-                    case 1:
-                        viewStock();
-                        break;
-                    case 2:
-                        updateStock(scanner);
-                        break;
-                    case 3:
-                        System.out.println("Returning to previous menu...");
-                        StockManagementPage.showStockMenu();// Exit this menu
-                    default:
-                        System.out.println("Invalid choice. Please try again.");
-                }
+        // Action Listener for View All Medicines Button
+        viewButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Display all medicines
+                displayStockList(stockFrame);
             }
-        } catch (Exception e) {
-            System.err.println("An unexpected error occurred in the stock menu: " + e.getMessage());
-            e.printStackTrace();
-        }
+        });
+
+        // Action Listener for Update Medicine Button
+        updateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Update stock or price logic
+                showUpdateMedicineDialog(stockFrame);
+            }
+        });
+
+        // Add buttons to the button panel
+        buttonPanel.add(viewButton);
+        buttonPanel.add(updateButton);
+
+        stockFrame.add(buttonPanel, BorderLayout.NORTH);
+        stockFrame.setVisible(true);
     }
 
-    // --- View Stock Functionality ---
-    private static void viewStock() {
+    // Display Medicine List
+    private static void displayStockList(JFrame parentFrame) {
         List<Medicine> medicines = getAllMedicinesFromDB();
 
-        if (medicines == null) {
-            System.out.println("Error retrieving medicine list from database.");
-        } else if (medicines.isEmpty()) {
-            System.out.println("No medicines found in stock.");
-        } else {
-            System.out.println("\n--- Current Medicine Stock ---");
-            System.out.println("-----------------------------------------------------------------------------------------");
-            for (Medicine med : medicines) {
-                System.out.println(med.toString());
-            }
-            System.out.println("-----------------------------------------------------------------------------------------");
-        }
-    }
-
-    // --- Update Stock Functionality ---
-    private static void updateStock(Scanner scanner) {
-        System.out.println("\n--- Update Medicine Stock/Price ---");
-        viewStock(); // Show current stock first for reference
-
-        System.out.print("Enter the ID of the medicine to update: ");
-        int idToUpdate = -1;
-        try {
-            idToUpdate = scanner.nextInt();
-        } catch (InputMismatchException e) {
-            System.out.println("Invalid ID. Please enter a number.");
-            scanner.next(); // Consume invalid input
-            if (scanner.hasNextLine()) scanner.nextLine(); // Consume newline
-            return; // Go back to menu
-        } finally {
-            if (scanner.hasNextLine()) scanner.nextLine(); // Consume newline always
-        }
-
-
-        Medicine medicineToUpdate = getMedicineByIdFromDB(idToUpdate);
-
-        if (medicineToUpdate == null) {
-            System.out.println("Medicine with ID " + idToUpdate + " not found.");
+        if (medicines == null || medicines.isEmpty()) {
+            JOptionPane.showMessageDialog(parentFrame, "No medicines found in stock.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        System.out.println("Selected: " + medicineToUpdate.toString());
+        // Display the medicines in a table
+        String[] columns = {"ID", "Name", "Type", "Price", "Stock"};
+        String[][] data = new String[medicines.size()][5];
 
-        // Update Price
-        System.out.print("Enter new price (or press Enter to keep current: " + medicineToUpdate.getPrice() + "): ");
-        String newPriceStr = scanner.nextLine().trim();
-        double newPrice = medicineToUpdate.getPrice(); // Default to current
-        if (!newPriceStr.isEmpty()) {
-            try {
-                newPrice = Double.parseDouble(newPriceStr);
-                if (newPrice < 0) {
-                    System.out.println("Price cannot be negative. Keeping current price.");
-                    newPrice = medicineToUpdate.getPrice();
-                } else {
-                    medicineToUpdate.setPrice(newPrice);
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid price format. Keeping current price.");
-                newPrice = medicineToUpdate.getPrice(); // Revert if invalid
-            }
+        for (int i = 0; i < medicines.size(); i++) {
+            Medicine med = medicines.get(i);
+            data[i][0] = String.valueOf(med.getId());
+            data[i][1] = med.getName();
+            data[i][2] = med.getType();
+            data[i][3] = String.valueOf(med.getPrice());
+            data[i][4] = String.valueOf(med.getStock());
         }
 
+        JTable medicineTable = new JTable(data, columns);
+        JScrollPane scrollPane = new JScrollPane(medicineTable);
+        parentFrame.add(scrollPane, BorderLayout.CENTER);
+        parentFrame.revalidate(); // Refresh to display the table
+    }
 
-        // Update Stock
-        System.out.print("Enter new stock quantity (or press Enter to keep current: " + medicineToUpdate.getStock() + "): ");
-        String newStockStr = scanner.nextLine().trim();
-        int newStock = medicineToUpdate.getStock(); // Default to current
-        if (!newStockStr.isEmpty()) {
+    // Show Update Dialog
+    private static void showUpdateMedicineDialog(JFrame parentFrame) {
+        JTextField idField = new JTextField(5);
+        JTextField priceField = new JTextField(5);
+        JTextField stockField = new JTextField(5);
+
+        JPanel panel = new JPanel();
+        panel.add(new JLabel("Enter Medicine ID to Update:"));
+        panel.add(idField);
+        panel.add(new JLabel("Enter New Price:"));
+        panel.add(priceField);
+        panel.add(new JLabel("Enter New Stock Quantity:"));
+        panel.add(stockField);
+
+        int option = JOptionPane.showConfirmDialog(parentFrame, panel, "Update Medicine Details", JOptionPane.OK_CANCEL_OPTION);
+
+        if (option == JOptionPane.OK_OPTION) {
             try {
-                newStock = Integer.parseInt(newStockStr);
-                if (newStock < 0) {
-                    System.out.println("Stock cannot be negative. Keeping current stock.");
-                    newStock = medicineToUpdate.getStock();
+                int id = Integer.parseInt(idField.getText().trim());
+                double price = Double.parseDouble(priceField.getText().trim());
+                int stock = Integer.parseInt(stockField.getText().trim());
+
+                Medicine medicine = getMedicineByIdFromDB(id);
+                if (medicine != null) {
+                    medicine.setPrice(price);
+                    medicine.setStock(stock);
+                    if (updateMedicineInDB(medicine)) {
+                        JOptionPane.showMessageDialog(parentFrame, "Medicine updated successfully!");
+                    } else {
+                        JOptionPane.showMessageDialog(parentFrame, "Failed to update medicine.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 } else {
-                    medicineToUpdate.setStock(newStock);
+                    JOptionPane.showMessageDialog(parentFrame, "Medicine not found with ID: " + id, "Error", JOptionPane.ERROR_MESSAGE);
                 }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid stock format. Keeping current stock.");
-                newStock = medicineToUpdate.getStock(); // Revert if invalid
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(parentFrame, "Invalid input. Please enter valid numbers.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        }
-
-
-        // Perform the database update
-        if (updateMedicineInDB(medicineToUpdate)) {
-            System.out.println("Medicine ID " + medicineToUpdate.getId() + " updated successfully.");
-        } else {
-            System.out.println("Failed to update medicine ID " + medicineToUpdate.getId() + ".");
         }
     }
 
-    // --- Database Interaction Methods (Direct JDBC) ---
+    // Database Interaction Methods (Direct JDBC)
 
     private static List<Medicine> getAllMedicinesFromDB() {
         List<Medicine> medicines = new ArrayList<>();
-        String sql = "SELECT medicine_id, medicine_name, type, price, stock FROM medicines ";
+        String sql = "SELECT medicine_id, medicine_name, type, price, stock FROM medicines";
 
         try (Connection con = DBconnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
 
             if (con == null) {
-                System.err.println("DB Connection failed in getAllMedicinesFromDB.");
+                System.err.println("DB Connection failed.");
                 return null;
             }
 
@@ -215,27 +181,20 @@ public class StockManagementPage {
         } catch (SQLException e) {
             System.err.println("SQL Error fetching all medicines: " + e.getMessage());
             e.printStackTrace();
-            return null; // Indicate error
+            return null;
         }
     }
 
     private static Medicine getMedicineByIdFromDB(int id) {
-        // Corrected SQL query using medicine_id in WHERE clause
         String sql = "SELECT medicine_id, medicine_name, type, price, stock FROM medicines WHERE medicine_id = ?";
         Medicine medicine = null;
 
         try (Connection con = DBconnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-            if (con == null) {
-                System.err.println("DB Connection failed in getMedicineByIdFromDB.");
-                return null;
-            }
-
-            pstmt.setInt(1, id); // Set the ID parameter
-            try (ResultSet rs = pstmt.executeQuery()) { // Line 235 where error occurred
+            pstmt.setInt(1, id);
+            try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    // Retrieve data using the correct column names
                     medicine = new Medicine(
                             rs.getInt("medicine_id"),
                             rs.getString("medicine_name"),
@@ -245,48 +204,32 @@ public class StockManagementPage {
                     );
                 }
             }
-            return medicine; // Will be null if not found
+            return medicine;
 
         } catch (SQLException e) {
-            // Error message now makes sense - 'id' was unknown
             System.err.println("SQL Error fetching medicine by ID " + id + ": " + e.getMessage());
             e.printStackTrace();
-            return null; // Indicate error
+            return null;
         }
     }
 
     private static boolean updateMedicineInDB(Medicine medicine) {
-        // Corrected SQL query using medicine_id in WHERE clause
         String sql = "UPDATE medicines SET price = ?, stock = ? WHERE medicine_id = ?";
 
         try (Connection con = DBconnection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-            if (con == null) {
-                System.err.println("DB Connection failed in updateMedicineInDB.");
-                return false;
-            }
-
             pstmt.setDouble(1, medicine.getPrice());
             pstmt.setInt(2, medicine.getStock());
-            // Use the ID from the Medicine object, which corresponds to medicine_id
             pstmt.setInt(3, medicine.getId());
 
             int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0; // Return true if at least one row was updated
+            return rowsAffected > 0;
 
         } catch (SQLException e) {
             System.err.println("SQL Error updating medicine ID " + medicine.getId() + ": " + e.getMessage());
             e.printStackTrace();
-            return false; // Indicate error
+            return false;
         }
     }
-
-    // --- Main method for testing this page directly (optional) ---
-//    public static void main(String[] args) {
-//        // This allows you to run just this page for testing
-//        System.out.println("Testing Stock Management Page...");
-//        showStockMenu();
-//        System.out.println("Exiting Stock Management Test.");
-//    }
 }

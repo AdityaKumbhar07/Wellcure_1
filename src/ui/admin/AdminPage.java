@@ -2,31 +2,63 @@ package ui.admin;
 
 import ui.StartWindow;
 
-import java.util.Scanner;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class AdminPage {
-    public static void admin(){
-        System.out.println("Admin page");
-        Scanner sc = new Scanner(System.in);
 
-        int choice = sc.nextInt();
+    public static void admin() {
+        JFrame adminFrame = new JFrame("Admin Page");
+        adminFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        adminFrame.setSize(400, 300);
+        adminFrame.setLayout(new BorderLayout());
 
-        switch (choice){
-            case 1:
-                OrderRequestPage.order();
-                break;
-            case 2:
-                StockManagementPage.showStockMenu();
-                break;
-            case 3:
-                //GenerateReport();
-                break;
-            case 4:
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(4, 1, 10, 10));
+
+        JButton orderButton = new JButton("View Order Requests");
+        JButton stockButton = new JButton("Manage Stock");
+        JButton reportButton = new JButton("Generate Report");
+        JButton exitButton = new JButton("Exit to Start Window");
+
+        orderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new OrderRequestPage().order();
+            }
+        });
+
+        stockButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                StockManagementPage.showStockManagementPage(adminFrame);
+            }
+        });
+
+        reportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(adminFrame, "Report generation is not implemented yet.");
+            }
+        });
+
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                adminFrame.dispose();
                 new StartWindow();
-                break;
-            default:
-                System.out.println("no choice");
-        }
+            }
+        });
 
+        panel.add(orderButton);
+        panel.add(stockButton);
+        panel.add(reportButton);
+        panel.add(exitButton);
+
+        adminFrame.add(panel, BorderLayout.CENTER);
+
+        adminFrame.setVisible(true);
     }
 }
