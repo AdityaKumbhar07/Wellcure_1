@@ -81,7 +81,7 @@ public class StockManagementPage {
                         break;
                     case 3:
                         System.out.println("Returning to previous menu...");
-                        return; // Exit this menu
+                        StockManagementPage.showStockMenu();// Exit this menu
                     default:
                         System.out.println("Invalid choice. Please try again.");
                 }
@@ -283,10 +283,10 @@ public class StockManagementPage {
     }
 
     // --- Main method for testing this page directly (optional) ---
-    public static void main(String[] args) {
-        // This allows you to run just this page for testing
-        System.out.println("Testing Stock Management Page...");
-        showStockMenu();
-        System.out.println("Exiting Stock Management Test.");
-    }
+//    public static void main(String[] args) {
+//        // This allows you to run just this page for testing
+//        System.out.println("Testing Stock Management Page...");
+//        showStockMenu();
+//        System.out.println("Exiting Stock Management Test.");
+//    }
 }

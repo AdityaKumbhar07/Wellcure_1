@@ -16,7 +16,7 @@ public class AdminPage {
                 OrderRequestPage.order();
                 break;
             case 2:
-                StockManagementPage. showStockMenu();
+                StockManagementPage.showStockMenu();
                 break;
             case 3:
                 //GenerateReport();

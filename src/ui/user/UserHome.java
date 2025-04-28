@@ -21,6 +21,7 @@ public class UserHome {
             System.out.println("3. Upload Prescription (Coming Soon!)");
             System.out.println("4. view medicine");
             System.out.println("5. Exit");
+            System.out.println("6. View orders");
             System.out.print("Enter your choice: ");
 
             int choice = sc.nextInt();
@@ -39,7 +40,8 @@ public class UserHome {
                     break;
                 case 3:
                     // Placeholder for uploading prescription
-                    System.out.println("\nUpload Prescription feature coming soon!");
+                    UploadPrescriptionPage.uploadPrescription(username);
+                    System.out.println("\nUpload Prescription feature come!");
                     break;
                 case 4:
                     // Display medicine list
@@ -48,6 +50,10 @@ public class UserHome {
                 case 5:
                     System.out.println("Exiting...");
                     System.exit(0);
+                    break;
+                case 6:
+                    System.out.println("order page send");
+                    OrderPage.showUserOrders(username);
                     break;
                 default:
                     System.out.println("\nInvalid choice. Please try again.");
