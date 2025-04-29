@@ -2,9 +2,7 @@
 create database wellcure;
 use wellcure;
 
-
-
--- creat user table
+- creat user table
 create table users(
 	user_id INT auto_increment key,
     name varchar(100),
@@ -13,7 +11,7 @@ create table users(
     address varchar(100)
 );
 
--- create medicine table 
+-- create medicine table
 create table medicines(
 	medicine_id int auto_increment primary key,
     medicine_name varchar(40),
@@ -23,7 +21,7 @@ create table medicines(
 );
 
 CREATE TABLE prescriptions (
-    prescriptions_id INT AUTO_INCREMENT PRIMARY KEY,
+    prescription_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     image_path VARCHAR(300),
     status VARCHAR(50),
@@ -41,7 +39,8 @@ CREATE TABLE orders (
 );
 
 
-INSERT INTO users (user_id,username, password) VALUES ('1', 'admin', '1234');
+
+-- Insert sample data
 
 INSERT INTO medicines (medicine_name, type, price, stock)
 VALUES ('Paracetamol', 'tablet', 20.5, 100);
@@ -49,5 +48,19 @@ VALUES ('Paracetamol', 'tablet', 20.5, 100);
 INSERT INTO medicines (medicine_name, type, price, stock)
 VALUES ('Azytramycine', 'tablet', 40, 150);
 
-drop table medicine;
-delete *from users where user_name = a;
+INSERT INTO medicines (medicine_name, type, price, stock)
+VALUES ('Ibuprofen', 'tablet', 25.75, 80);
+
+INSERT INTO medicines (medicine_name, type, price, stock)
+VALUES ('Amoxicillin', 'capsule', 35.25, 120);
+
+-- sample medicine
+INSERT INTO medicines (medicine_name, type, price, stock)
+VALUES ('Paracetamol', 'tablet', 20.5, 100);
+
+INSERT INTO medicines (medicine_name, type, price, stock)
+VALUES ('Azytramycine', 'tablet', 40, 150);
+
+-- Cleanup commands (commented out for safety)
+-- drop table medicine;
+-- delete from users where username = 'a';

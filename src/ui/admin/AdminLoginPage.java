@@ -1,20 +1,17 @@
-package ui.user;
+package ui.admin;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.*;
-
-import Model.User;
-import controller.UserController;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import ui.StartWindow;
-import ui.user.UserHomePage;
 
-public class UserLoginPage {
+public class AdminLoginPage {
 
-    public static void login() {
+    public static void adminlogin() {
         // Create the JFrame for the login page
-        JFrame frame = new JFrame("User Login - WellCure");
+        JFrame frame = new JFrame("Admin Login - WellCure");
         frame.setSize(450, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
@@ -36,7 +33,7 @@ public class UserLoginPage {
         mainPanel.add(Box.createVerticalStrut(10));
 
         // Title and subtitle
-        JLabel titleLabel = new JLabel("User Login");
+        JLabel titleLabel = new JLabel("Admin Login");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         mainPanel.add(titleLabel);
@@ -82,16 +79,6 @@ public class UserLoginPage {
         loginButton.setBackground(new Color(230, 230, 230));
         loginButton.setFocusPainted(false);
         mainPanel.add(loginButton);
-        mainPanel.add(Box.createVerticalStrut(15));
-
-        // Register button
-        JButton registerButton = new JButton("Register");
-        registerButton.setFont(new Font("Arial", Font.BOLD, 14));
-        registerButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        registerButton.setMaximumSize(new Dimension(200, 40));
-        registerButton.setBackground(new Color(230, 230, 230));
-        registerButton.setFocusPainted(false);
-        mainPanel.add(registerButton);
 
         // Add main panel to frame
         frame.add(mainPanel, BorderLayout.CENTER);
@@ -108,23 +95,13 @@ public class UserLoginPage {
                     return;
                 }
 
-                if (UserController.loginvalid(username, password)) {
+                if (username.equals("admin") && password.equals("admin123")) {
                     JOptionPane.showMessageDialog(frame, "Login Successful", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    new UserHomePage(username);
                     frame.dispose(); // Close login window
+                    AdminPage.admin();
                 } else {
-                    JOptionPane.showMessageDialog(frame, "Invalid Username or Password", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, "Invalid credentials, try again.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-            }
-        });
-
-        // Action for Register Button
-        registerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Navigate to registration page
-                UserRegistrationPage.Registration();
-                frame.dispose(); // Close login window
             }
         });
 

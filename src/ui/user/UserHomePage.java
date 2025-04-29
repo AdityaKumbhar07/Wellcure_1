@@ -85,6 +85,7 @@ public class UserHomePage {
         // Frame settings
         userHomeFrame.setSize(400, 300);
         userHomeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        userHomeFrame.setLocationRelativeTo(null);
         userHomeFrame.setVisible(true);
     }
 
