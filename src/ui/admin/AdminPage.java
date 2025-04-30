@@ -70,14 +70,18 @@ public class AdminPage {
         // Button action listeners
         orderButton.addActionListener(new ActionListener() {
             @Override
+
             public void actionPerformed(ActionEvent e) {
+                adminFrame.dispose();
                 OrderRequestPage.order();
             }
+
         });
 
         stockButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                adminFrame.dispose();
                 StockManagementPage.showStockManagementPage(adminFrame);
             }
         });

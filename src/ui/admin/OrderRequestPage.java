@@ -191,8 +191,9 @@ public class OrderRequestPage {
             return;
         }
 
-        // Query to get order data - simplified to not use order_items table
-        String sql = "SELECT o.order_id, o.order_status FROM orders o";
+        // Query to get order data
+//        String sql = "SELECT o.order_id, o.order_status FROM orders o";
+        String sql = "SELECT o.order_id, o.order_status FROM orders o WHERE o.order_status = 'Pending'";
 
         try (PreparedStatement pst = con.prepareStatement(sql);
              ResultSet rs = pst.executeQuery()) {

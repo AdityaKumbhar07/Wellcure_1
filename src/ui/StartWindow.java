@@ -6,13 +6,13 @@ import java.awt.*;
 import java.awt.event.*;
 
 import ui.admin.AdminLoginPage;
-import ui.admin.AdminPage;
 import ui.user.UserLoginPage;
-import ui.user.UserRegistrationPage;
 
 public class StartWindow {
 
     public StartWindow() {
+        // *********************** The gui part **************************
+
         // JFrame for the Start Window
         JFrame frame = new JFrame("Welcome to WellCure");
         frame.setSize(450, 400);
@@ -27,9 +27,9 @@ public class StartWindow {
 
         // Power icon at top left - more stylish
         JPanel topPanel = new JPanel(new BorderLayout());
-        JLabel powerIcon = new JLabel("⏻");
+        JLabel powerIcon = new JLabel("<-");
         powerIcon.setFont(new Font("Arial", Font.BOLD, 24));
-        powerIcon.setForeground(new Color(70, 70, 70));
+        powerIcon.setForeground(new Color(194, 178, 178));
         topPanel.add(powerIcon, BorderLayout.WEST);
         mainPanel.add(topPanel);
         mainPanel.add(Box.createVerticalStrut(20));
@@ -62,6 +62,11 @@ public class StartWindow {
 
         // Add main panel to frame
         frame.add(mainPanel, BorderLayout.CENTER);
+
+
+        // ********************* The gui part ***********************
+
+        // ********************* The action part ***********************
 
         // Login Button Action
         loginButton.addActionListener(new ActionListener() {
@@ -106,6 +111,7 @@ public class StartWindow {
                 powerIcon.setForeground(new Color(70, 70, 70)); // Reset color
             }
         });
+        // ********************* The action part ***********************
 
         // Make the start window visible
         frame.setVisible(true);

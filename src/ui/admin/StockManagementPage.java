@@ -118,6 +118,7 @@ public class StockManagementPage {
             @Override
             public void actionPerformed(ActionEvent e) {
                 stockFrame.dispose();
+                AdminPage.admin();
             }
         });
 

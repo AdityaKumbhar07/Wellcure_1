@@ -49,6 +49,7 @@ public class UploadPrescriptionPage {
             }
         } else {
             showErrorMessage("No file selected!");
+            new UserHomePage(username);
         }
     }
 
