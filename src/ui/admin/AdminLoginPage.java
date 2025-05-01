@@ -3,85 +3,128 @@ package ui.admin;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import ui.StartWindow;
+import java.awt.event.*;
 
+import ui.StartWindow;
+import ui.util.UIConfig;
+
+/**
+ * AdminLoginPage provides the login interface for administrators.
+ * It allows administrators to authenticate with their credentials
+ * to access the admin panel and management features.
+ */
 public class AdminLoginPage {
 
+    // ==================== UI Configuration Constants ====================
+
+    // Window settings
+    private static final String WINDOW_TITLE = "Admin Login - WellCure";
+    private static final int WINDOW_WIDTH = 450;
+    private static final int WINDOW_HEIGHT = 500;
+
+    // Content settings
+    private static final String TITLE_TEXT = "Admin Login";
+    private static final String SUBTITLE_TEXT = "Sign in to continue.";
+    private static final String USERNAME_LABEL = "USERNAME";
+    private static final String PASSWORD_LABEL = "PASSWORD";
+    private static final String LOGIN_BUTTON_TEXT = "Log in";
+    private static final String BACK_BUTTON_TEXT = "←";
+
+    // Spacing settings
+    private static final int TITLE_SPACING = 10;
+    private static final int SUBTITLE_SPACING = 30;
+    private static final int FIELD_LABEL_SPACING = 5;
+    private static final int FIELD_SPACING = 20;
+    private static final int BUTTON_SPACING = 15;
+
+    // Field dimensions
+    private static final Dimension FIELD_SIZE = new Dimension(300, 30);
+
+    /**
+     * Initializes and displays the admin login page.
+     */
     public static void adminlogin() {
         // Create the JFrame for the login page
-        JFrame frame = new JFrame("Admin Login - WellCure");
-        frame.setSize(450, 500);
+        JFrame frame = new JFrame(WINDOW_TITLE);
+        frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
+        UIConfig.styleFrame(frame);
 
         // Main panel with padding
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setBorder(new EmptyBorder(30, 40, 30, 40));
+        UIConfig.stylePanel(mainPanel);
 
         // Back button at top left
         JPanel topPanel = new JPanel(new BorderLayout());
-        JButton backButton = new JButton("←");
-        backButton.setFont(new Font("Arial", Font.BOLD, 16));
-        backButton.setFocusPainted(false);
+        topPanel.setBackground(UIConfig.PRIMARY_BG);
+
+        JButton backButton = new JButton(BACK_BUTTON_TEXT);
+        backButton.setFont(UIConfig.SUBTITLE_FONT);
+        backButton.setForeground(UIConfig.ACCENT_COLOR);
+        backButton.setBackground(UIConfig.PRIMARY_BG);
         backButton.setBorderPainted(false);
+        backButton.setFocusPainted(false);
         backButton.setContentAreaFilled(false);
+
         topPanel.add(backButton, BorderLayout.WEST);
         mainPanel.add(topPanel);
         mainPanel.add(Box.createVerticalStrut(10));
 
         // Title and subtitle
-        JLabel titleLabel = new JLabel("Admin Login");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        JLabel titleLabel = new JLabel(TITLE_TEXT);
+        UIConfig.styleTitle(titleLabel);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         mainPanel.add(titleLabel);
-        mainPanel.add(Box.createVerticalStrut(10));
+        mainPanel.add(Box.createVerticalStrut(TITLE_SPACING));
 
-        JLabel subtitleLabel = new JLabel("Sign in to continue.");
-        subtitleLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        JLabel subtitleLabel = new JLabel(SUBTITLE_TEXT);
+        UIConfig.styleSubtitle(subtitleLabel);
         subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         mainPanel.add(subtitleLabel);
-        mainPanel.add(Box.createVerticalStrut(30));
+        mainPanel.add(Box.createVerticalStrut(SUBTITLE_SPACING));
 
-        // Username field - centered
-        JLabel usernameLabel = new JLabel("USERNAME");
-        usernameLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        // Username field
+        JLabel usernameLabel = new JLabel(USERNAME_LABEL);
+        usernameLabel.setFont(UIConfig.REGULAR_FONT);
         usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         mainPanel.add(usernameLabel);
-        mainPanel.add(Box.createVerticalStrut(5));
+        mainPanel.add(Box.createVerticalStrut(FIELD_LABEL_SPACING));
 
         JTextField usernameField = new JTextField();
-        usernameField.setMaximumSize(new Dimension(300, 30));
+        UIConfig.styleTextField(usernameField);
+        usernameField.setMaximumSize(FIELD_SIZE);
         usernameField.setAlignmentX(Component.CENTER_ALIGNMENT);
         mainPanel.add(usernameField);
-        mainPanel.add(Box.createVerticalStrut(20));
+        mainPanel.add(Box.createVerticalStrut(FIELD_SPACING));
 
-        // Password field - centered
-        JLabel passwordLabel = new JLabel("PASSWORD");
-        passwordLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        // Password field
+        JLabel passwordLabel = new JLabel(PASSWORD_LABEL);
+        passwordLabel.setFont(UIConfig.REGULAR_FONT);
         passwordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         mainPanel.add(passwordLabel);
-        mainPanel.add(Box.createVerticalStrut(5));
+        mainPanel.add(Box.createVerticalStrut(FIELD_LABEL_SPACING));
 
         JPasswordField passwordField = new JPasswordField();
-        passwordField.setMaximumSize(new Dimension(300, 30));
+        UIConfig.styleTextField(passwordField);
+        passwordField.setMaximumSize(FIELD_SIZE);
         passwordField.setAlignmentX(Component.CENTER_ALIGNMENT);
         mainPanel.add(passwordField);
-        mainPanel.add(Box.createVerticalStrut(30));
+        mainPanel.add(Box.createVerticalStrut(FIELD_SPACING));
 
         // Login button
-        JButton loginButton = new JButton("Log in");
-        loginButton.setFont(new Font("Arial", Font.BOLD, 14));
+        JButton loginButton = new JButton(LOGIN_BUTTON_TEXT);
+        UIConfig.styleButton(loginButton);
         loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        loginButton.setMaximumSize(new Dimension(200, 40));
-        loginButton.setBackground(new Color(230, 230, 230));
-        loginButton.setFocusPainted(false);
+        loginButton.setMaximumSize(UIConfig.BUTTON_SIZE);
         mainPanel.add(loginButton);
 
         // Add main panel to frame
         frame.add(mainPanel, BorderLayout.CENTER);
+
+        // ==================== Event Handlers ====================
 
         // Action for Login Button
         loginButton.addActionListener(new ActionListener() {
