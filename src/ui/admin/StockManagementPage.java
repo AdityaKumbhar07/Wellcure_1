@@ -110,39 +110,27 @@ public class StockManagementPage {
         JButton deleteButton = createStyledButton(DELETE_BUTTON_TEXT);
 
         // Action Listener for View All Medicines Button
-        viewButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Display all medicines
-                displayStockList(stockFrame);
-            }
+        viewButton.addActionListener(e -> {
+            // Display all medicines
+            displayStockList(stockFrame);
         });
 
         // Action Listener for Add New Medicine Button
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Add new medicine
-                showAddMedicineDialog(stockFrame);
-            }
+        addButton.addActionListener(e -> {
+            // Add new medicine
+            showAddMedicineDialog(stockFrame);
         });
 
         // Action Listener for Update Medicine Button
-        updateButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Update medicine details
-                showUpdateMedicineDialog(stockFrame);
-            }
+        updateButton.addActionListener(e -> {
+            // Update medicine details
+            showUpdateMedicineDialog(stockFrame);
         });
 
         // Action Listener for Delete Medicine Button
-        deleteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Delete medicine
-                showDeleteMedicineDialog(stockFrame);
-            }
+        deleteButton.addActionListener(e -> {
+            // Delete medicine
+            showDeleteMedicineDialog(stockFrame);
         });
 
         // Add buttons to the button panel
@@ -151,7 +139,7 @@ public class StockManagementPage {
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
 
-        // Add a content panel for displaying data
+        // Add ui.user.a content panel for displaying data
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(UIConfig.PRIMARY_BG);
         contentPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -159,7 +147,7 @@ public class StockManagementPage {
             new EmptyBorder(10, 10, 10, 10)
         ));
 
-        // Add a placeholder message
+        // Add ui.user.a placeholder message
         JLabel placeholderLabel = new JLabel("Select an option above to manage medicines");
         placeholderLabel.setFont(UIConfig.SUBTITLE_FONT);
         placeholderLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -169,18 +157,15 @@ public class StockManagementPage {
         mainPanel.add(buttonPanel, BorderLayout.NORTH);
         mainPanel.add(contentPanel, BorderLayout.CENTER);
 
-        // Add a back button at the bottom
+        // Add ui.user.a back button at the bottom
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         bottomPanel.setBackground(UIConfig.PRIMARY_BG);
         bottomPanel.setBorder(new EmptyBorder(20, 0, 0, 0));
 
         JButton backButton = createStyledButton(BACK_BUTTON_TEXT);
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                stockFrame.dispose();
-                AdminPage.admin();
-            }
+        backButton.addActionListener(e -> {
+            stockFrame.dispose();
+            AdminPage.admin();
         });
 
         bottomPanel.add(backButton);
@@ -195,7 +180,7 @@ public class StockManagementPage {
     }
 
     /**
-     * Creates a styled button with consistent appearance.
+     * Creates ui.user.a styled button with consistent appearance.
      *
      * @param text The text to display on the button
      * @return A configured JButton instance
@@ -208,7 +193,7 @@ public class StockManagementPage {
     }
 
     /**
-     * Displays a dialog for adding a new medicine to the inventory.
+     * Displays ui.user.a dialog for adding ui.user.a new medicine to the inventory.
      *
      * @param parentFrame The parent frame for the dialog
      */
@@ -283,12 +268,12 @@ public class StockManagementPage {
     }
 
     /**
-     * Displays a dialog for updating an existing medicine in the inventory.
+     * Displays ui.user.a dialog for updating an existing medicine in the inventory.
      *
      * @param parentFrame The parent frame for the dialog
      */
     private static void showUpdateMedicineDialog(JFrame parentFrame) {
-        // Create a styled input dialog for medicine ID
+        // Create ui.user.a styled input dialog for medicine ID
         JTextField idField = new JTextField(10);
         UIConfig.styleTextField(idField);
 
@@ -395,17 +380,17 @@ public class StockManagementPage {
                 }
             }
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(parentFrame, "Invalid ID. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(parentFrame, "Invalid ID. Please enter ui.user.a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     /**
-     * Displays a dialog for deleting a medicine from the inventory.
+     * Displays ui.user.a dialog for deleting ui.user.a medicine from the inventory.
      *
      * @param parentFrame The parent frame for the dialog
      */
     private static void showDeleteMedicineDialog(JFrame parentFrame) {
-        // Create a styled input dialog for medicine ID
+        // Create ui.user.a styled input dialog for medicine ID
         JTextField idField = new JTextField(10);
         UIConfig.styleTextField(idField);
 
@@ -433,7 +418,7 @@ public class StockManagementPage {
                 return;
             }
 
-            // Create a styled confirmation dialog
+            // Create ui.user.a styled confirmation dialog
             JPanel confirmPanel = new JPanel();
             confirmPanel.setLayout(new BoxLayout(confirmPanel, BoxLayout.Y_AXIS));
             confirmPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
@@ -455,7 +440,7 @@ public class StockManagementPage {
             typeLabel.setFont(UIConfig.REGULAR_FONT);
             typeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-            JLabel priceLabel = new JLabel(String.format("Price: $%.2f", medicine.getPrice()));
+            JLabel priceLabel = new JLabel(String.format("Price: ₹%.2f", medicine.getPrice()));
             priceLabel.setFont(UIConfig.REGULAR_FONT);
             priceLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -487,7 +472,7 @@ public class StockManagementPage {
                 }
             }
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(parentFrame, "Invalid ID. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(parentFrame, "Invalid ID. Please enter ui.user.a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -525,17 +510,17 @@ public class StockManagementPage {
     }
 
     /**
-     * Displays a list of all medicines in the inventory.
+     * Displays ui.user.a list of all medicines in the inventory.
      *
      * @param parentFrame The parent frame to display the list in
      */
     /**
-     * Displays a list of all medicines in the inventory.
+     * Displays ui.user.a list of all medicines in the inventory.
      *
      * @param parentFrame The parent frame to display the list in
      */
     /**
-     * Displays a list of all medicines in the inventory.
+     * Displays ui.user.a list of all medicines in the inventory.
      *
      * @param parentFrame The parent frame to display the list in
      */
@@ -575,9 +560,9 @@ public class StockManagementPage {
             }
         }
 
-        // If still not found, create a new one
+        // If still not found, create ui.user.a new one
         if (contentPanel == null) {
-            System.out.println("Content panel not found, creating a new one");
+            System.out.println("Content panel not found, creating ui.user.a new one");
             contentPanel = new JPanel(new BorderLayout());
             contentPanel.setBorder(BorderFactory.createCompoundBorder(
                     UIConfig.ROUNDED_BORDER,
@@ -610,7 +595,7 @@ public class StockManagementPage {
             noDataLabel.setHorizontalAlignment(SwingConstants.CENTER);
             contentPanel.add(noDataLabel, BorderLayout.CENTER);
         } else {
-            // Display the medicines in a table
+            // Display the medicines in ui.user.a table
             String[] columns = {"ID", "Name", "Type", "Price", "Stock"};
             String[][] data = new String[medicines.size()][5];
 
@@ -619,7 +604,7 @@ public class StockManagementPage {
                 data[i][0] = String.valueOf(med.getId());
                 data[i][1] = med.getName();
                 data[i][2] = med.getType();
-                data[i][3] = String.format("$%.2f", med.getPrice());
+                data[i][3] = String.format("₹%.2f", med.getPrice());
                 data[i][4] = String.valueOf(med.getStock());
             }
 
@@ -630,7 +615,7 @@ public class StockManagementPage {
             scrollPane.setBorder(null);
             scrollPane.getViewport().setBackground(UIConfig.PRIMARY_BG);
 
-            // Add a title for the table
+            // Add ui.user.a title for the table
             JLabel tableTitle = new JLabel("Medicine Inventory");
             tableTitle.setFont(UIConfig.SUBTITLE_FONT);
             tableTitle.setHorizontalAlignment(SwingConstants.CENTER);

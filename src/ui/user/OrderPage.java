@@ -6,14 +6,12 @@ import ui.util.UIConfig;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * OrderPage displays the user's orders and allows them to checkout draft orders.
+ * OrderPage displays the user's orders and allows them to check out draft orders.
  * It retrieves order information from the database and provides options to manage orders.
  */
 public class OrderPage {
@@ -85,7 +83,7 @@ public class OrderPage {
             for (int i = 0; i < orders.size(); i++) {
                 Order order = orders.get(i);
 
-                // Create a panel for each order with a border
+                // Create ui.user.a panel for each order with ui.user.a border
                 JPanel orderDetailsPanel = new JPanel();
                 orderDetailsPanel.setLayout(new BoxLayout(orderDetailsPanel, BoxLayout.Y_AXIS));
                 orderDetailsPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -118,13 +116,10 @@ public class OrderPage {
                 checkoutButton.setMaximumSize(new Dimension(150, 40));
 
                 if ("Draft".equals(order.getStatus())) {
-                    checkoutButton.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            // Navigate to payment page
-                            frame.dispose();
-                            PaymentPage.showPaymentPage(order.getPrescriptionId(), username);
-                        }
+                    checkoutButton.addActionListener(e -> {
+                        // Navigate to payment page
+                        frame.dispose();
+                        PaymentPage.showPaymentPage(order.getPrescriptionId(), username);
                     });
                 } else {
                     checkoutButton.setEnabled(false);
@@ -142,7 +137,7 @@ public class OrderPage {
             }
         }
 
-        // Add orders panel to a scroll pane
+        // Add orders panel to ui.user.a scroll pane
         JScrollPane scrollPane = new JScrollPane(ordersPanel);
         scrollPane.setBorder(null);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
@@ -157,12 +152,9 @@ public class OrderPage {
         UIConfig.styleButton(backButton);
         backButton.setPreferredSize(new Dimension(150, 40));
 
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose();
-                new UserHomePage(username);
-            }
+        backButton.addActionListener(e -> {
+            frame.dispose();
+            new UserHomePage(username);
         });
 
         buttonPanel.add(backButton);

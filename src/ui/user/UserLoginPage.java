@@ -1,47 +1,62 @@
 package ui.user;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.RoundRectangle2D;
 
 import Model.User;
 import controller.UserController;
 import ui.StartWindow;
-import ui.util.UIConfig;
 
 /**
  * UserLoginPage provides the login interface for regular users.
  * It allows users to authenticate with their username and password,
- * or navigate to the registration page to create a new account.
+ * or navigate to the registration page to create ui.user.a new account.
  */
 public class UserLoginPage {
 
-    // ==================== UI Configuration Constants ====================
-
-    // Window settings
+    // Simple UI Configuration - Easy to customize
     private static final String WINDOW_TITLE = "User Login - WellCure";
-    private static final int WINDOW_WIDTH = 400;
-    private static final int WINDOW_HEIGHT = 450;
-
-    // Content settings
+    private static final int WINDOW_WIDTH = 390;
+    private static final int WINDOW_HEIGHT = 500;
+    
+    // Colors
+    private static final Color BG_COLOR = Color.WHITE;
+    private static final Color TEXT_COLOR = Color.BLACK;
+    private static final Color SECONDARY_TEXT_COLOR = new Color(100, 100, 100);
+    private static final Color BUTTON_BG = new Color(44, 43, 43);
+    private static final Color BUTTON_FG = new Color(255, 255, 255);
+    private static final Color FIELD_BORDER = new Color(220, 220, 220);
+    private static final Color BACK_COLOR = new Color(70, 70, 70);
+    
+    // Content
     private static final String TITLE_TEXT = "User Login";
     private static final String SUBTITLE_TEXT = "Sign in to continue.";
     private static final String USERNAME_LABEL = "USERNAME";
     private static final String PASSWORD_LABEL = "PASSWORD";
     private static final String LOGIN_BUTTON_TEXT = "Log in";
     private static final String REGISTER_BUTTON_TEXT = "Register";
-    private static final String BACK_BUTTON_TEXT = "←";
-
-    // Spacing settings
-    private static final int TITLE_SPACING = 10;
-    private static final int SUBTITLE_SPACING = 30;
-    private static final int FIELD_LABEL_SPACING = 5;
-    private static final int FIELD_SPACING = 20;
-    private static final int BUTTON_SPACING = 15;
-
-    // Field dimensions
-    private static final Dimension FIELD_SIZE = new Dimension(300, 30);
+    private static final String BACK_BUTTON_TEXT = "<--";
+    
+    // Component positions - Adjust these to change the layout
+    private static final int BACK_BUTTON_X = 20;
+    private static final int BACK_BUTTON_Y = 20;
+    private static final int TITLE_Y = 40;
+    private static final int SUBTITLE_Y = 75;
+    private static final int USERNAME_LABEL_Y = 135;
+    private static final int USERNAME_FIELD_Y = 154;
+    private static final int PASSWORD_LABEL_Y = 222;
+    private static final int PASSWORD_FIELD_Y = 245;
+    private static final int LOGIN_BUTTON_Y = 320;
+    private static final int REGISTER_BUTTON_Y = 385;
+    
+    // Component dimensions
+    private static final int FIELD_WIDTH = 220;
+    private static final int FIELD_HEIGHT = 40;
+    private static final int BUTTON_WIDTH = 220;
+    private static final int BUTTON_HEIGHT = 45;
+    private static final int CORNER_RADIUS = 10;
 
     /**
      * Initializes and displays the user login page.
@@ -51,93 +66,69 @@ public class UserLoginPage {
         JFrame frame = new JFrame(WINDOW_TITLE);
         frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new BorderLayout());
-        UIConfig.styleFrame(frame);
-
-        // Main panel with padding
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setBorder(new EmptyBorder(30, 40, 30, 40));
-        UIConfig.stylePanel(mainPanel);
-
+        frame.setLayout(null); // Use null layout for direct positioning
+        frame.getContentPane().setBackground(BG_COLOR);
+        
         // Back button at top left
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setBackground(UIConfig.PRIMARY_BG);
-
         JButton backButton = new JButton(BACK_BUTTON_TEXT);
-        backButton.setFont(UIConfig.SUBTITLE_FONT);
-        backButton.setForeground(UIConfig.ACCENT_COLOR);
-        backButton.setBackground(UIConfig.PRIMARY_BG);
+        backButton.setFont(new Font("Arial", Font.BOLD, 16));
+        backButton.setForeground(BACK_COLOR);
+        backButton.setBackground(BG_COLOR);
         backButton.setBorderPainted(false);
         backButton.setFocusPainted(false);
         backButton.setContentAreaFilled(false);
-
-        topPanel.add(backButton, BorderLayout.WEST);
-        mainPanel.add(topPanel);
-        mainPanel.add(Box.createVerticalStrut(10));
-
-        // Title and subtitle
-        JLabel titleLabel = new JLabel(TITLE_TEXT);
-        UIConfig.styleTitle(titleLabel);
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mainPanel.add(titleLabel);
-        mainPanel.add(Box.createVerticalStrut(TITLE_SPACING));
-
-        JLabel subtitleLabel = new JLabel(SUBTITLE_TEXT);
-        UIConfig.styleSubtitle(subtitleLabel);
-        subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mainPanel.add(subtitleLabel);
-        mainPanel.add(Box.createVerticalStrut(SUBTITLE_SPACING));
-
-        // Username field
+        backButton.setBounds(BACK_BUTTON_X, BACK_BUTTON_Y, 30, 30);
+        frame.add(backButton);
+        
+        // Title
+        JLabel titleLabel = new JLabel(TITLE_TEXT, JLabel.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 32));
+        titleLabel.setForeground(TEXT_COLOR);
+        titleLabel.setBounds(0, TITLE_Y, WINDOW_WIDTH, 40);
+        frame.add(titleLabel);
+        
+        // Subtitle
+        JLabel subtitleLabel = new JLabel(SUBTITLE_TEXT, JLabel.CENTER);
+        subtitleLabel.setFont(new Font("Arial", Font.PLAIN, 17));
+        subtitleLabel.setForeground(SECONDARY_TEXT_COLOR);
+        subtitleLabel.setBounds(0, SUBTITLE_Y, WINDOW_WIDTH, 25);
+        frame.add(subtitleLabel);
+        
+        // Username label
         JLabel usernameLabel = new JLabel(USERNAME_LABEL);
-        usernameLabel.setFont(UIConfig.REGULAR_FONT);
-        usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mainPanel.add(usernameLabel);
-        mainPanel.add(Box.createVerticalStrut(FIELD_LABEL_SPACING));
-
-        JTextField usernameField = new JTextField();
-        UIConfig.styleTextField(usernameField);
-        usernameField.setMaximumSize(FIELD_SIZE);
-        usernameField.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mainPanel.add(usernameField);
-        mainPanel.add(Box.createVerticalStrut(FIELD_SPACING));
-
-        // Password field
+        usernameLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        usernameLabel.setForeground(SECONDARY_TEXT_COLOR);
+        usernameLabel.setBounds((WINDOW_WIDTH - FIELD_WIDTH)/2, USERNAME_LABEL_Y, FIELD_WIDTH, 20);
+        frame.add(usernameLabel);
+        
+        // Username field
+        JTextField usernameField = createRoundedTextField();
+        usernameField.setBounds((WINDOW_WIDTH - FIELD_WIDTH)/2, USERNAME_FIELD_Y, FIELD_WIDTH, FIELD_HEIGHT);
+        frame.add(usernameField);
+        
+        // Password label
         JLabel passwordLabel = new JLabel(PASSWORD_LABEL);
-        passwordLabel.setFont(UIConfig.REGULAR_FONT);
-        passwordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mainPanel.add(passwordLabel);
-        mainPanel.add(Box.createVerticalStrut(FIELD_LABEL_SPACING));
-
-        JPasswordField passwordField = new JPasswordField();
-        UIConfig.styleTextField(passwordField);
-        passwordField.setMaximumSize(FIELD_SIZE);
-        passwordField.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mainPanel.add(passwordField);
-        mainPanel.add(Box.createVerticalStrut(FIELD_SPACING));
-
+        passwordLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        passwordLabel.setForeground(SECONDARY_TEXT_COLOR);
+        passwordLabel.setBounds((WINDOW_WIDTH - FIELD_WIDTH)/2, PASSWORD_LABEL_Y, FIELD_WIDTH, 20);
+        frame.add(passwordLabel);
+        
+        // Password field
+        JPasswordField passwordField = createRoundedPasswordField();
+        passwordField.setBounds((WINDOW_WIDTH - FIELD_WIDTH)/2, PASSWORD_FIELD_Y, FIELD_WIDTH, FIELD_HEIGHT);
+        frame.add(passwordField);
+        
         // Login button
-        JButton loginButton = new JButton(LOGIN_BUTTON_TEXT);
-        UIConfig.styleButton(loginButton);
-        loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        loginButton.setMaximumSize(UIConfig.BUTTON_SIZE);
-        mainPanel.add(loginButton);
-        mainPanel.add(Box.createVerticalStrut(BUTTON_SPACING));
-
+        JButton loginButton = createRoundedButton(LOGIN_BUTTON_TEXT);
+        loginButton.setBounds((WINDOW_WIDTH - BUTTON_WIDTH)/2, LOGIN_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
+        frame.add(loginButton);
+        
         // Register button
-        JButton registerButton = new JButton(REGISTER_BUTTON_TEXT);
-        UIConfig.styleButton(registerButton);
-        registerButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        registerButton.setMaximumSize(UIConfig.BUTTON_SIZE);
-        mainPanel.add(registerButton);
-
-        // Add main panel to frame
-        frame.add(mainPanel, BorderLayout.CENTER);
-
-        // ==================== Event Handlers ====================
-
-        // Action for Login Button
+        JButton registerButton = createRoundedButton(REGISTER_BUTTON_TEXT);
+        registerButton.setBounds((WINDOW_WIDTH - BUTTON_WIDTH)/2, REGISTER_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
+        frame.add(registerButton);
+        
+        // Event handlers
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -148,7 +139,7 @@ public class UserLoginPage {
                     JOptionPane.showMessageDialog(frame, "Please fill all the fields", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-
+                
                 if (UserController.loginvalid(username, password)) {
                     JOptionPane.showMessageDialog(frame, "Login Successful", "Success", JOptionPane.INFORMATION_MESSAGE);
                     new UserHomePage(username);
@@ -159,7 +150,6 @@ public class UserLoginPage {
             }
         });
 
-        // Action for Register Button
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -168,8 +158,7 @@ public class UserLoginPage {
                 frame.dispose(); // Close login window
             }
         });
-
-        // Action for Back Button
+        
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -179,8 +168,111 @@ public class UserLoginPage {
             }
         });
 
-        // Make the login page visible
-        frame.setLocationRelativeTo(null);  // Center the window on the screen
+        // Display the window
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+    
+    /**
+     * Creates ui.user.a text field with rounded corners.
+     */
+    private static JTextField createRoundedTextField() {
+        JTextField textField = new JTextField() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                if (!isOpaque()) {
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    g2.setColor(getBackground());
+                    g2.fill(new RoundRectangle2D.Double(0, 0, getWidth() - 1, getHeight() - 1, CORNER_RADIUS, CORNER_RADIUS));
+                    g2.dispose();
+                }
+                super.paintComponent(g);
+            }
+            
+            @Override
+            protected void paintBorder(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(FIELD_BORDER);
+                g2.draw(new RoundRectangle2D.Double(0, 0, getWidth() - 1, getHeight() - 1, CORNER_RADIUS, CORNER_RADIUS));
+                g2.dispose();
+            }
+        };
+        
+        textField.setOpaque(false);
+        textField.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        textField.setFont(new Font("Arial", Font.PLAIN, 14));
+        
+        return textField;
+    }
+    
+    /**
+     * Creates ui.user.a password field with rounded corners.
+     */
+    private static JPasswordField createRoundedPasswordField() {
+        JPasswordField passwordField = new JPasswordField() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                if (!isOpaque()) {
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    g2.setColor(getBackground());
+                    g2.fill(new RoundRectangle2D.Double(0, 0, getWidth() - 1, getHeight() - 1, CORNER_RADIUS, CORNER_RADIUS));
+                    g2.dispose();
+                }
+                super.paintComponent(g);
+            }
+            
+            @Override
+            protected void paintBorder(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(FIELD_BORDER);
+                g2.draw(new RoundRectangle2D.Double(0, 0, getWidth() - 1, getHeight() - 1, CORNER_RADIUS, CORNER_RADIUS));
+                g2.dispose();
+            }
+        };
+        
+        passwordField.setOpaque(false);
+        passwordField.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        passwordField.setFont(new Font("Arial", Font.PLAIN, 14));
+        
+        return passwordField;
+    }
+    
+    /**
+     * Creates ui.user.a button with rounded corners.
+     */
+    private static JButton createRoundedButton(String text) {
+        JButton button = new JButton(text) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                
+                // Paint rounded background
+                g2.setColor(getBackground());
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), CORNER_RADIUS, CORNER_RADIUS);
+                
+                // Paint text
+                g2.setColor(getForeground());
+                FontMetrics fm = g2.getFontMetrics();
+                int textX = (getWidth() - fm.stringWidth(getText())) / 2;
+                int textY = (getHeight() - fm.getHeight()) / 2 + fm.getAscent();
+                g2.drawString(getText(), textX, textY);
+                
+                g2.dispose();
+            }
+        };
+        
+        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.setBackground(BUTTON_BG);
+        button.setForeground(BUTTON_FG);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        
+        return button;
     }
 }

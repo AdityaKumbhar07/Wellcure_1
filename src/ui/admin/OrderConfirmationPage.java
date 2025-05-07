@@ -6,8 +6,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +37,7 @@ public class OrderConfirmationPage {
     private double totalPrice;
 
     /**
-     * Class to represent a medicine from the database
+     * Class to represent ui.user.a medicine from the database
      */
     private static class Medicine {
         private int id;
@@ -64,7 +62,7 @@ public class OrderConfirmationPage {
 
         @Override
         public String toString() {
-            return name + " (" + type + ") - $" + price + " - Stock: " + stock;
+            return name + " (" + type + ") - ₹" + price + " - Stock: " + stock;
         }
     }
 
@@ -284,33 +282,13 @@ public class OrderConfirmationPage {
         frame.add(mainPanel);
 
         // Add action listeners
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addMedicineToOrder();
-            }
-        });
+        addButton.addActionListener(e -> addMedicineToOrder());
 
-        removeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                removeMedicineFromOrder();
-            }
-        });
+        removeButton.addActionListener(e -> removeMedicineFromOrder());
 
-        confirmButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                confirmOrder();
-            }
-        });
+        confirmButton.addActionListener(e -> confirmOrder());
 
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose();
-            }
-        });
+        cancelButton.addActionListener(e -> frame.dispose());
 
         // Display the frame
         frame.setLocationRelativeTo(null);
@@ -318,13 +296,13 @@ public class OrderConfirmationPage {
     }
 
     /**
-     * Add a medicine to the order
+     * Add ui.user.a medicine to the order
      */
     private void addMedicineToOrder() {
         Medicine selectedMedicine = (Medicine) medicineComboBox.getSelectedItem();
         if (selectedMedicine == null) {
             JOptionPane.showMessageDialog(frame,
-                    "Please select a medicine.",
+                    "Please select ui.user.a medicine.",
                     "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -343,7 +321,7 @@ public class OrderConfirmationPage {
             }
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(frame,
-                    "Please enter a valid quantity.",
+                    "Please enter ui.user.a valid quantity.",
                     "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -356,9 +334,9 @@ public class OrderConfirmationPage {
         tableModel.addRow(new Object[]{
                 selectedMedicine.getName(),
                 selectedMedicine.getType(),
-                String.format("$%.2f", selectedMedicine.getPrice()),
+                String.format("₹%.2f", selectedMedicine.getPrice()),
                 quantity,
-                String.format("$%.2f", item.getTotalPrice())
+                String.format("₹%.2f", item.getTotalPrice())
         });
 
         // Update total price
@@ -369,13 +347,13 @@ public class OrderConfirmationPage {
     }
 
     /**
-     * Remove a medicine from the order
+     * Remove ui.user.a medicine from the order
      */
     private void removeMedicineFromOrder() {
         int selectedRow = selectedMedicinesTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(frame,
-                    "Please select a medicine to remove.",
+                    "Please select ui.user.a medicine to remove.",
                     "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -396,7 +374,7 @@ public class OrderConfirmationPage {
         for (OrderItem item : selectedItems) {
             totalPrice += item.getTotalPrice();
         }
-        totalPriceLabel.setText(String.format("Total Price: $%.2f", totalPrice));
+        totalPriceLabel.setText(String.format("Total Price: ₹%.2f", totalPrice));
     }
 
     /**
@@ -412,7 +390,7 @@ public class OrderConfirmationPage {
 
         // Confirm with user
         int response = JOptionPane.showConfirmDialog(frame,
-                "Are you sure you want to confirm this order?\nTotal Price: $" + String.format("%.2f", totalPrice),
+                "Are you sure you want to confirm this order?\nTotal Price: ₹" + String.format("%.2f", totalPrice),
                 "Confirm Order", JOptionPane.YES_NO_OPTION);
 
         if (response != JOptionPane.YES_OPTION) {
@@ -425,7 +403,7 @@ public class OrderConfirmationPage {
             conn = DBconnection.getConnection();
             conn.setAutoCommit(false);
 
-            // 1. Update order status to Confirmed
+            // 1. Update order status to Confirm
             String updateOrderSql = "UPDATE orders SET order_status = 'Confirmed' WHERE order_id = ?";
             try (PreparedStatement stmt = conn.prepareStatement(updateOrderSql)) {
                 stmt.setInt(1, orderId);
@@ -465,7 +443,7 @@ public class OrderConfirmationPage {
             frame.dispose();
 
             // Refresh the order request page
-//            OrderRequestPage.refreshOrderData();
+            OrderRequestPage.refreshOrderData();
 
         } catch (SQLException e) {
             // Rollback transaction on error

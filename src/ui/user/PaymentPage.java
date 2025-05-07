@@ -4,7 +4,6 @@ import database.DBconnection;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.*;
 import java.sql.*;
 
 public class PaymentPage {
@@ -80,30 +79,25 @@ public class PaymentPage {
         frame.add(mainPanel, BorderLayout.CENTER);
 
         // Action for Cancel Button
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose();
-            }
+        cancelButton.addActionListener(e -> {
+            frame.dispose();
+            new UserHomePage(username);
         });
 
         // Action for Confirm Button
-        confirmButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (codOption.isSelected()) {
-                    if (updateOrderStatus(prescriptionId, "Pending")) {
-                        JOptionPane.showMessageDialog(frame,
-                                "Order confirmed with Cash On Delivery payment option!",
-                                "Order Confirmed", JOptionPane.INFORMATION_MESSAGE);
-                        frame.dispose();
-                        // Return to user home page
-                        new UserHomePage(username);
-                    } else {
-                        JOptionPane.showMessageDialog(frame,
-                                "Failed to confirm order. Please try again.",
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    }
+        confirmButton.addActionListener(e -> {
+            if (codOption.isSelected()) {
+                if (updateOrderStatus(prescriptionId, "Pending")) {
+                    JOptionPane.showMessageDialog(frame,
+                            "Order confirmed with Cash On Delivery payment option!",
+                            "Order Confirmed", JOptionPane.INFORMATION_MESSAGE);
+                    frame.dispose();
+                    // Return to user home page
+                    new UserHomePage(username);
+                } else {
+                    JOptionPane.showMessageDialog(frame,
+                            "Failed to confirm order. Please try again.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

@@ -6,8 +6,6 @@ import ui.util.UIConfig;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * AdminPage provides the main dashboard for administrators.
@@ -72,8 +70,8 @@ public class AdminPage {
         logoutPanel.setBackground(UIConfig.PRIMARY_BG);
         JButton logoutButton = new JButton(LOGOUT_BUTTON_TEXT);
         UIConfig.styleButton(logoutButton);
+        logoutButton.setSize(50 , 30);
         logoutPanel.add(logoutButton);
-
         topPanel.add(titlePanel, BorderLayout.CENTER);
         topPanel.add(logoutPanel, BorderLayout.EAST);
 
@@ -119,36 +117,22 @@ public class AdminPage {
         // ==================== Event Handlers ====================
 
         // Button action listeners
-        orderButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                adminFrame.dispose();
-                OrderRequestPage.order();
-            }
+        orderButton.addActionListener(e -> {
+            adminFrame.dispose();
+            OrderRequestPage.order();
         });
 
-        stockButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                adminFrame.dispose();
-                StockManagementPage.showStockManagementPage();
-            }
+        stockButton.addActionListener(e -> {
+            adminFrame.dispose();
+            StockManagementPage.showStockManagementPage();
         });
 
-        paymentButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(adminFrame, "Payment management is not implemented yet.");
-            }
-        });
+        paymentButton.addActionListener(e -> JOptionPane.showMessageDialog(adminFrame, "Payment management is not implemented yet."));
 
         // Logout button action
-        logoutButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                adminFrame.dispose();
-                new StartWindow();
-            }
+        logoutButton.addActionListener(e -> {
+            adminFrame.dispose();
+            new StartWindow();
         });
 
         // Center the frame on screen and make it visible

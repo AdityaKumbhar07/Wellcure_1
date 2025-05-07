@@ -30,11 +30,12 @@ public class UserController {
         try {
             Connection con = DBconnection.getConnection();
             PreparedStatement ps = con.prepareStatement(
-                    "INSERT INTO users (name, username, password, address) VALUES (?, ?, ?, ?)");
+                    "INSERT INTO users (name, username, password, address, email) VALUES (?, ?, ?, ? , ?)");
             ps.setString(1, user.getName());
             ps.setString(2, user.getUsername());
             ps.setString(3, user.getPassword());
             ps.setString(4, user.getAddress());
+            ps.setString(5, user.getEmail());
             ps.executeUpdate();
             return true;
         } catch (SQLIntegrityConstraintViolationException e) {

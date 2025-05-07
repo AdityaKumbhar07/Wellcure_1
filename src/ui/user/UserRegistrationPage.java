@@ -160,48 +160,42 @@ public class UserRegistrationPage {
         // ==================== Event Handlers ====================
 
         // Action for Register Button
-        registerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String name = nameField.getText();
-                String username = usernameField.getText();
-                String password = new String(passwordField.getPassword());
-                String address = addressField.getText();
-                String email = emailField.getText(); // Get email (though not saved to DB yet)
+        registerButton.addActionListener(e -> {
+            String name = nameField.getText();
+            String username = usernameField.getText();
+            String password = new String(passwordField.getPassword());
+            String address = addressField.getText();
+            String email = emailField.getText();
 
-                // Validate input fields
-                if (name.isEmpty() || username.isEmpty() || password.isEmpty() || address.isEmpty()) {
-                    JOptionPane.showMessageDialog(frame, "Please fill in all required fields.", "Validation Error", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
+            // Validate input fields
+            if (name.isEmpty() || username.isEmpty() || password.isEmpty() || address.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Please fill in all required fields.", "Validation Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
-                // Email validation (basic check)
-                if (!email.isEmpty() && !email.contains("@")) {
-                    JOptionPane.showMessageDialog(frame, "Please enter a valid email address.", "Validation Error", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
+            // Email validation (basic check)
+            if (!email.isEmpty() && !email.contains("@") && !email.contains(".") && !email.contains("com")) {
+                JOptionPane.showMessageDialog(frame, "Please enter ui.user.a valid email address.", "Validation Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
-                User user = new User(name, username, password, address);
-                boolean success = UserController.registervalid(user);
+            User user = new User(name, username, password, address, email);
+            boolean success = UserController.registervalid(user);
 
-                if (success) {
-                    JOptionPane.showMessageDialog(frame, "Registration Successful", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    frame.dispose();  // Close registration window
-                    new StartWindow();
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Registration Failed. Username might already exist.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
+            if (success) {
+                JOptionPane.showMessageDialog(frame, "Registration Successful", "Success", JOptionPane.INFORMATION_MESSAGE);
+                frame.dispose();  // Close registration window
+                new StartWindow();
+            } else {
+                JOptionPane.showMessageDialog(frame, "Registration Failed. Username might already exist.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
         // Action for Back Button
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Go back to login page
-                UserLoginPage.login();
-                frame.dispose(); // Close registration window
-            }
+        backButton.addActionListener(e -> {
+            // Go back to login page
+            UserLoginPage.login();
+            frame.dispose(); // Close registration window
         });
 
         // Make the registration page visible

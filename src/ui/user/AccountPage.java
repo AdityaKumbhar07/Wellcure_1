@@ -6,8 +6,6 @@ import ui.util.UIConfig;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -104,7 +102,7 @@ public class AccountPage {
                     detailsPanel.add(Box.createVerticalStrut(FIELD_SPACING));
                     detailsPanel.add(addressLabel);
 
-                    // Check if email column exists and has a value
+                    // Check if email column exists and has ui.user.a value
                     try {
                         String email = rs.getString("email");
                         if (email != null && !email.isEmpty()) {
@@ -143,12 +141,9 @@ public class AccountPage {
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backButton.setMaximumSize(new Dimension(150, 40));
 
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose(); // Close the current window
-                new UserHomePage(username).showUserHomePage(); // Go back to User Home Page
-            }
+        backButton.addActionListener(e -> {
+            frame.dispose(); // Close the current window
+            new UserHomePage(username).showUserHomePage(); // Go back to User Home Page
         });
 
         mainPanel.add(backButton);

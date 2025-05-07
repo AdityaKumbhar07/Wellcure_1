@@ -5,12 +5,14 @@ public class User {
     private String username;
     private String password;
     private String address;
+    private String email;
 
-    public User(String name, String username, String password, String address) {
+    public User(String name, String username, String password, String address, String email) {
         this.name = name;
         this.username = username;
         this.password = password;
         this.address = address;
+        this.email = email;
     }
 
     public String getName() {
@@ -44,5 +46,9 @@ public class User {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public String getEmail(){ return email; }
+
+    public void setEmail(String email) { this.email = email; }
 
 }

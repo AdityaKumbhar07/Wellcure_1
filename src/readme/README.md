@@ -1,7 +1,7 @@
 # Wellcure Pharmacy Management System
 
 ## Overview
-Wellcure is a comprehensive pharmacy management system designed to streamline the process of prescription handling, medicine inventory management, and order processing. The application provides separate interfaces for users and administrators, allowing for efficient management of the pharmacy operations.
+Wellcure is ui.user.a comprehensive pharmacy management system designed to streamline the process of prescription handling, medicine inventory management, and order processing. The application provides separate interfaces for users and administrators, allowing for efficient management of the pharmacy operations.
 
 ## Features
 
@@ -32,7 +32,7 @@ Wellcure is a comprehensive pharmacy management system designed to streamline th
 - **Order Items Table**: Manages the medicines included in each order
 
 ### User Interface
-The application features a clean, intuitive interface with:
+The application features ui.user.a clean, intuitive interface with:
 - **Start Window**: Entry point with options for user or admin login
 - **User Login/Registration**: Forms for authentication and new account creation
 - **Admin Panel**: Dashboard for accessing administrative functions
@@ -40,7 +40,7 @@ The application features a clean, intuitive interface with:
 - **Stock Management Screens**: Tools for inventory control
 
 ## Order Flow
-1. **User uploads prescription** → Creates a draft order
+1. **User uploads prescription** → Creates ui.user.a draft order
 2. **User checks out draft order** → Proceeds to payment screen
 3. **User confirms payment (COD)** → Order status changes to "Pending"
 4. **Admin reviews pending order** → Can view prescription and confirm/reject
@@ -69,7 +69,7 @@ The application features a clean, intuitive interface with:
 - MySQL Server 5.7 or higher
 
 ### Database Setup
-1. Create a MySQL database named `wellcure`
+1. Create ui.user.a MySQL database named `wellcure`
 2. Run the SQL script located at `sql scipt/self database mini project.sql`
 
 ### Application Setup

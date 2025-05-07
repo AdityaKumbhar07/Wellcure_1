@@ -7,8 +7,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.*;
 
 /**
@@ -133,7 +131,7 @@ public class OrderRequestPage {
             }
         });
 
-        // Add table to a scroll pane
+        // Add table to ui.user.a scroll pane
         JScrollPane scrollPane = new JScrollPane(orderTable);
         scrollPane.setBorder(UIConfig.ROUNDED_BORDER);
         scrollPane.getViewport().setBackground(UIConfig.PRIMARY_BG);
@@ -168,60 +166,48 @@ public class OrderRequestPage {
         // ==================== Event Handlers ====================
 
         // Go Back Button Action
-        goBackButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Set current instance to null before disposing
-                currentInstance = null;
-                frame.dispose();
-                AdminPage.admin();
-            }
+        goBackButton.addActionListener(e -> {
+            // Set current instance to null before disposing
+            currentInstance = null;
+            frame.dispose();
+            AdminPage.admin();
         });
 
         // View Prescription Button Action
-        viewButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (selectedOrderId != -1) {
-                    viewPrescription(selectedOrderId);
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Please select an order first.", "No Selection", JOptionPane.WARNING_MESSAGE);
-                }
+        viewButton.addActionListener(e -> {
+            if (selectedOrderId != -1) {
+                viewPrescription(selectedOrderId);
+            } else {
+                JOptionPane.showMessageDialog(frame, "Please select an order first.", "No Selection", JOptionPane.WARNING_MESSAGE);
             }
         });
 
         // Confirm Order Button Action
-        confirmButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (selectedOrderId != -1) {
-                    // Open the order confirmation page
-                    OrderConfirmationPage.showOrderConfirmation(selectedOrderId);
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Please select an order first.", "No Selection", JOptionPane.WARNING_MESSAGE);
-                }
+        confirmButton.addActionListener(e -> {
+            if (selectedOrderId != -1) {
+                // Open the order confirmation page
+                OrderConfirmationPage.showOrderConfirmation(selectedOrderId);
+            } else {
+                JOptionPane.showMessageDialog(frame, "Please select an order first.", "No Selection", JOptionPane.WARNING_MESSAGE);
             }
         });
 
         // Reject Order Button Action
-        rejectButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (selectedOrderId != -1) {
-                    int confirm = JOptionPane.showConfirmDialog(frame,
-                            "Are you sure you want to reject this order?",
-                            "Confirm Rejection", JOptionPane.YES_NO_OPTION);
-                    if (confirm == JOptionPane.YES_OPTION) {
-                        if (rejectOrder(selectedOrderId)) {
-                            JOptionPane.showMessageDialog(frame, "Order rejected successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
-                            loadOrderData();
-                        } else {
-                            JOptionPane.showMessageDialog(frame, "Failed to reject order.", "Error", JOptionPane.ERROR_MESSAGE);
-                        }
+        rejectButton.addActionListener(e -> {
+            if (selectedOrderId != -1) {
+                int confirm = JOptionPane.showConfirmDialog(frame,
+                        "Are you sure you want to reject this order?",
+                        "Confirm Rejection", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    if (rejectOrder(selectedOrderId)) {
+                        JOptionPane.showMessageDialog(frame, "Order rejected successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                        loadOrderData();
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Failed to reject order.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Please select an order first.", "No Selection", JOptionPane.WARNING_MESSAGE);
                 }
+            } else {
+                JOptionPane.showMessageDialog(frame, "Please select an order first.", "No Selection", JOptionPane.WARNING_MESSAGE);
             }
         });
 
@@ -256,17 +242,8 @@ public class OrderRequestPage {
                 while (rs.next()) {
                     int orderId = rs.getInt("order_id");
                     String orderStatus = rs.getString("order_status");
-                    // Use a placeholder value for total price since we're not calculating it from order_items
+                    // Use ui.user.a placeholder value for total price since we're not calculating it from order_items
                     double totalPrice = 0.0; // Default value
-
-                    // You could set different placeholder prices based on order status if desired
-                    if ("Confirmed".equals(orderStatus)) {
-                        totalPrice = 100.0; // Example placeholder for confirmed orders
-                    } else if ("Pending".equals(orderStatus)) {
-                        totalPrice = 75.0; // Example placeholder for pending orders
-                    } else {
-                        totalPrice = 50.0; // Default placeholder for other statuses
-                    }
 
                     // Add row to table model
                     tableModel.addRow(new Object[]{
@@ -284,7 +261,7 @@ public class OrderRequestPage {
     }
 
     /**
-     * View the prescription for a specific order.
+     * View the prescription for ui.user.a specific order.
      *
      * @param orderId The ID of the order
      */
@@ -319,14 +296,14 @@ public class OrderRequestPage {
     }
 
     /**
-     * Display the prescription image in a new window.
+     * Display the prescription image in ui.user.a new window.
      *
      * @param imagePath The path to the prescription image
      * @param orderId The ID of the order
      */
     private void displayPrescriptionImage(String imagePath, int orderId) {
         JFrame imageFrame = new JFrame("Prescription for Order #" + orderId);
-        imageFrame.setSize(600, 800);
+        imageFrame.setSize(900, 800);
         imageFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         UIConfig.styleFrame(imageFrame);
 
@@ -404,7 +381,7 @@ public class OrderRequestPage {
      * This method is called after an order is confirmed or rejected.
      */
     public static void refreshOrderData() {
-        // Only refresh if there's a current instance
+        // Only refresh if there's ui.user.a current instance
         if (currentInstance != null) {
             currentInstance.loadOrderData();
         }
