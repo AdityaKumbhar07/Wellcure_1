@@ -175,7 +175,7 @@ public class UserRegistrationPage {
 
             // Email validation (basic check)
             if (!email.isEmpty() && !email.contains("@") && !email.contains(".") && !email.contains("com")) {
-                JOptionPane.showMessageDialog(frame, "Please enter ui.user.a valid email address.", "Validation Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "Please enter a valid email address.", "Validation Error", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 

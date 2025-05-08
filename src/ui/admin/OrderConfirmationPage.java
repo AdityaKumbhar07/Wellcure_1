@@ -6,6 +6,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +39,7 @@ public class OrderConfirmationPage {
     private double totalPrice;
 
     /**
-     * Class to represent ui.user.a medicine from the database
+     * Class to represent a medicine from the database
      */
     private static class Medicine {
         private int id;
@@ -62,7 +64,7 @@ public class OrderConfirmationPage {
 
         @Override
         public String toString() {
-            return name + " (" + type + ") - ₹" + price + " - Stock: " + stock;
+            return name + " (" + type + ") - $" + price + " - Stock: " + stock;
         }
     }
 
@@ -282,13 +284,34 @@ public class OrderConfirmationPage {
         frame.add(mainPanel);
 
         // Add action listeners
-        addButton.addActionListener(e -> addMedicineToOrder());
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addMedicineToOrder();
+            }
+        });
 
-        removeButton.addActionListener(e -> removeMedicineFromOrder());
+        removeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeMedicineFromOrder();
+            }
+        });
 
-        confirmButton.addActionListener(e -> confirmOrder());
+        confirmButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                confirmOrder();
+            }
+        });
 
-        cancelButton.addActionListener(e -> frame.dispose());
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                OrderRequestPage.order();
+            }
+        });
 
         // Display the frame
         frame.setLocationRelativeTo(null);
@@ -296,13 +319,13 @@ public class OrderConfirmationPage {
     }
 
     /**
-     * Add ui.user.a medicine to the order
+     * Add a medicine to the order
      */
     private void addMedicineToOrder() {
         Medicine selectedMedicine = (Medicine) medicineComboBox.getSelectedItem();
         if (selectedMedicine == null) {
             JOptionPane.showMessageDialog(frame,
-                    "Please select ui.user.a medicine.",
+                    "Please select a medicine.",
                     "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -321,7 +344,7 @@ public class OrderConfirmationPage {
             }
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(frame,
-                    "Please enter ui.user.a valid quantity.",
+                    "Please enter a valid quantity.",
                     "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -334,9 +357,9 @@ public class OrderConfirmationPage {
         tableModel.addRow(new Object[]{
                 selectedMedicine.getName(),
                 selectedMedicine.getType(),
-                String.format("₹%.2f", selectedMedicine.getPrice()),
+                String.format("$%.2f", selectedMedicine.getPrice()),
                 quantity,
-                String.format("₹%.2f", item.getTotalPrice())
+                String.format("$%.2f", item.getTotalPrice())
         });
 
         // Update total price
@@ -347,13 +370,13 @@ public class OrderConfirmationPage {
     }
 
     /**
-     * Remove ui.user.a medicine from the order
+     * Remove a medicine from the order
      */
     private void removeMedicineFromOrder() {
         int selectedRow = selectedMedicinesTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(frame,
-                    "Please select ui.user.a medicine to remove.",
+                    "Please select a medicine to remove.",
                     "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -374,7 +397,7 @@ public class OrderConfirmationPage {
         for (OrderItem item : selectedItems) {
             totalPrice += item.getTotalPrice();
         }
-        totalPriceLabel.setText(String.format("Total Price: ₹%.2f", totalPrice));
+        totalPriceLabel.setText(String.format("Total Price: $%.2f", totalPrice));
     }
 
     /**
@@ -390,7 +413,7 @@ public class OrderConfirmationPage {
 
         // Confirm with user
         int response = JOptionPane.showConfirmDialog(frame,
-                "Are you sure you want to confirm this order?\nTotal Price: ₹" + String.format("%.2f", totalPrice),
+                "Are you sure you want to confirm this order?\nTotal Price: $" + String.format("%.2f", totalPrice),
                 "Confirm Order", JOptionPane.YES_NO_OPTION);
 
         if (response != JOptionPane.YES_OPTION) {
@@ -403,10 +426,11 @@ public class OrderConfirmationPage {
             conn = DBconnection.getConnection();
             conn.setAutoCommit(false);
 
-            // 1. Update order status to Confirm
-            String updateOrderSql = "UPDATE orders SET order_status = 'Confirmed' WHERE order_id = ?";
+            // 1. Update order status to Confirmed
+            String updateOrderSql = "UPDATE orders SET order_status = 'Confirmed', total_price = ? WHERE order_id = ?";
             try (PreparedStatement stmt = conn.prepareStatement(updateOrderSql)) {
-                stmt.setInt(1, orderId);
+                stmt.setDouble(1,totalPrice);
+                stmt.setInt(2, orderId);
                 stmt.executeUpdate();
             }
 
@@ -443,7 +467,7 @@ public class OrderConfirmationPage {
             frame.dispose();
 
             // Refresh the order request page
-            OrderRequestPage.refreshOrderData();
+//            OrderRequestPage.refreshOrderData();
 
         } catch (SQLException e) {
             // Rollback transaction on error

@@ -4,6 +4,7 @@ import database.DBconnection;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.*;
 import java.sql.*;
 
 public class PaymentPage {
@@ -34,23 +35,23 @@ public class PaymentPage {
         mainPanel.add(Box.createVerticalStrut(30));
 
         // Payment options
-        JLabel paymentOptionsLabel = new JLabel("Select Payment Method:");
+        JLabel paymentOptionsLabel = new JLabel("Do you want to send the request to the admin?");
         paymentOptionsLabel.setFont(new Font("Arial", Font.BOLD, 16));
         paymentOptionsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         mainPanel.add(paymentOptionsLabel);
         mainPanel.add(Box.createVerticalStrut(15));
 
         // COD option
-        JRadioButton codOption = new JRadioButton("Cash On Delivery (COD)");
-        codOption.setFont(new Font("Arial", Font.PLAIN, 14));
-        codOption.setAlignmentX(Component.CENTER_ALIGNMENT);
-        codOption.setSelected(true); // Default selection
+//        JRadioButton codOption = new JRadioButton("Cash On Delivery (COD)");
+//        codOption.setFont(new Font("Arial", Font.PLAIN, 14));
+//        codOption.setAlignmentX(Component.CENTER_ALIGNMENT);
+//        codOption.setSelected(true); // Default selection
 
-        ButtonGroup paymentGroup = new ButtonGroup();
-        paymentGroup.add(codOption);
+//        ButtonGroup paymentGroup = new ButtonGroup();
+//        paymentGroup.add(codOption);
 
-        mainPanel.add(codOption);
-        mainPanel.add(Box.createVerticalStrut(30));
+//        mainPanel.add(codOption);
+//        mainPanel.add(Box.createVerticalStrut(30));
 
         // Buttons panel
         JPanel buttonPanel = new JPanel();
@@ -79,26 +80,26 @@ public class PaymentPage {
         frame.add(mainPanel, BorderLayout.CENTER);
 
         // Action for Cancel Button
-        cancelButton.addActionListener(e -> {
-            frame.dispose();
-            new UserHomePage(username);
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                OrderPage.showUserOrders(username);
+            }
         });
 
         // Action for Confirm Button
-        confirmButton.addActionListener(e -> {
-            if (codOption.isSelected()) {
-                if (updateOrderStatus(prescriptionId, "Pending")) {
-                    JOptionPane.showMessageDialog(frame,
-                            "Order confirmed with Cash On Delivery payment option!",
-                            "Order Confirmed", JOptionPane.INFORMATION_MESSAGE);
-                    frame.dispose();
-                    // Return to user home page
-                    new UserHomePage(username);
-                } else {
-                    JOptionPane.showMessageDialog(frame,
-                            "Failed to confirm order. Please try again.",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
+        confirmButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    if (updateOrderStatus(prescriptionId, "Pending")) {
+                        JOptionPane.showMessageDialog(frame,
+                                "Order Request has been send!",
+                                "Order Sent", JOptionPane.INFORMATION_MESSAGE);
+                        frame.dispose();
+                        // Return to user home page
+                        new UserHomePage(username);
+                    }
             }
         });
 

@@ -2,8 +2,6 @@
 create database wellcure;
 use wellcure;
 
-
-
 -- creat user table
 create table users(
 	user_id INT auto_increment key,
@@ -40,27 +38,16 @@ CREATE TABLE orders (
     FOREIGN KEY (prescription_id) REFERENCES prescriptions(prescription_id)
 );
 
--- create order items table
-CREATE TABLE order_items (
-    item_id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id INT,
-    medicine_id INT,
-    medicine_price DOUBLE,
-    quantity INT,
-    FOREIGN KEY (order_id) REFERENCES orders(order_id),
-    FOREIGN KEY (medicine_id) REFERENCES medicines(medicine_id)
-);
-
 
 -- Insert sample data
 INSERT INTO users (user_id, username, password) VALUES ('1', 'admin', '1234');
 INSERT INTO users (username, password, name, address) VALUES ('user1', 'password1', 'John Doe', '123 Main St');
 
-INSERT INTO medicines (medicine_name, type, price, stock)
-VALUES ('Paracetamol', 'tablet', 20.5, 100);
+INSERT INTO medicines (medicine_id,medicine_name, type, price, stock)
+VALUES (1,'Paracetamol', 'tablet', 20.5, 100);
 
 INSERT INTO medicines (medicine_name, type, price, stock)
-VALUES ('Azytramycine', 'tablet', 40, 150);
+VALUES (2,'Azytramycine', 'tablet', 40, 150);
 
 INSERT INTO medicines (medicine_name, type, price, stock)
 VALUES ('Ibuprofen', 'tablet', 25.75, 80);

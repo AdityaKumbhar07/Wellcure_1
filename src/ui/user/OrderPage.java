@@ -28,7 +28,9 @@ public class OrderPage {
     private static final String NO_ORDERS_TEXT = "No orders found.";
     private static final String PRESCRIPTION_ID_PREFIX = "Prescription ID: ";
     private static final String STATUS_PREFIX = "Status: ";
+    private static final String PRICE_PREFIX = "Total Price: ";
     private static final String CHECKOUT_BUTTON_TEXT = "Checkout";
+    private static final String MAKE_PAYMENT_BUTTON_TEXT = "Make Payment";
     private static final String BACK_BUTTON_TEXT = "Back";
 
     // Spacing settings
@@ -83,12 +85,12 @@ public class OrderPage {
             for (int i = 0; i < orders.size(); i++) {
                 Order order = orders.get(i);
 
-                // Create ui.user.a panel for each order with ui.user.a border
+                // Create a panel for each order with a border
                 JPanel orderDetailsPanel = new JPanel();
                 orderDetailsPanel.setLayout(new BoxLayout(orderDetailsPanel, BoxLayout.Y_AXIS));
                 orderDetailsPanel.setBorder(BorderFactory.createCompoundBorder(
-                    UIConfig.ROUNDED_BORDER,
-                    new EmptyBorder(10, 10, 10, 10)
+                        UIConfig.ROUNDED_BORDER,
+                        new EmptyBorder(10, 10, 10, 10)
                 ));
                 orderDetailsPanel.setBackground(UIConfig.PRIMARY_BG);
                 orderDetailsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -103,29 +105,87 @@ public class OrderPage {
                 statusLabel.setFont(UIConfig.REGULAR_FONT);
                 statusLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+                // Add price label with conditional display
+                String priceText;
+                if ("Confirmed".equals(order.getStatus())) {
+                    priceText = String.format("₹%.2f", order.getTotalPrice());
+                } else {
+                    priceText = "₹0.00";
+                }
+                JLabel priceLabel = new JLabel(PRICE_PREFIX + priceText);
+                priceLabel.setFont(UIConfig.REGULAR_FONT);
+                priceLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
                 // Add details to panel
                 orderDetailsPanel.add(prescriptionIdLabel);
                 orderDetailsPanel.add(Box.createVerticalStrut(FIELD_SPACING));
                 orderDetailsPanel.add(statusLabel);
                 orderDetailsPanel.add(Box.createVerticalStrut(FIELD_SPACING));
+                orderDetailsPanel.add(priceLabel);
+                orderDetailsPanel.add(Box.createVerticalStrut(FIELD_SPACING));
 
-                // Checkout button
-                JButton checkoutButton = new JButton(CHECKOUT_BUTTON_TEXT);
-                UIConfig.styleButton(checkoutButton);
-                checkoutButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-                checkoutButton.setMaximumSize(new Dimension(150, 40));
+                // Button panel for order actions
+                JPanel buttonPanel = new JPanel();
+                buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
+                buttonPanel.setBackground(UIConfig.PRIMARY_BG);
+                buttonPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+                buttonPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
 
+                // Add appropriate buttons based on order status
                 if ("Draft".equals(order.getStatus())) {
+                    // Checkout button for draft orders
+                    JButton checkoutButton = new JButton(CHECKOUT_BUTTON_TEXT);
+                    UIConfig.styleButton(checkoutButton);
+                    checkoutButton.setPreferredSize(new Dimension(150, 40));
+
                     checkoutButton.addActionListener(e -> {
-                        // Navigate to payment page
-                        frame.dispose();
-                        PaymentPage.showPaymentPage(order.getPrescriptionId(), username);
+                        // Get order ID
+                        int orderId = getOrderIdFromPrescription(order.getPrescriptionId());
+                        if (orderId > 0) {
+                            // Navigate to payment selection page
+                            frame.dispose();
+                            // Use 0.0 for draft orders
+                            PaymentPage.showPaymentPage(order.getPrescriptionId(), username);
+//                            PaymentSelectionPage.showPaymentSelectionPage(orderId, 0.0, username);
+                        } else {
+                            JOptionPane.showMessageDialog(frame,
+                                    "Error retrieving order information.",
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     });
+
+                    buttonPanel.add(checkoutButton);
+                } else if ("Confirmed".equals(order.getStatus())) {
+                    // Make Payment button for confirmed orders
+                    JButton makePaymentButton = new JButton(MAKE_PAYMENT_BUTTON_TEXT);
+                    UIConfig.styleButton(makePaymentButton);
+                    makePaymentButton.setPreferredSize(new Dimension(150, 40));
+
+                    makePaymentButton.addActionListener(e -> {
+                        // Get order ID
+                        int orderId = getOrderIdFromPrescription(order.getPrescriptionId());
+                        if (orderId > 0) {
+                            // Navigate to payment selection page
+                            frame.dispose();
+                            // Use the actual price for confirmed orders
+                            PaymentSelectionPage.showPaymentSelectionPage(orderId, order.getTotalPrice(), username);
+                        } else {
+                            JOptionPane.showMessageDialog(frame,
+                                    "Error retrieving order information.",
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    });
+
+                    buttonPanel.add(makePaymentButton);
                 } else {
-                    checkoutButton.setEnabled(false);
+                    // For other statuses (Pending, Rejected, etc.), no action buttons
+                    JLabel statusInfoLabel = new JLabel("No actions available");
+                    statusInfoLabel.setFont(UIConfig.REGULAR_FONT);
+                    statusInfoLabel.setForeground(Color.GRAY);
+                    buttonPanel.add(statusInfoLabel);
                 }
 
-                orderDetailsPanel.add(checkoutButton);
+                orderDetailsPanel.add(buttonPanel);
 
                 // Add order panel to orders panel
                 ordersPanel.add(orderDetailsPanel);
@@ -137,16 +197,16 @@ public class OrderPage {
             }
         }
 
-        // Add orders panel to ui.user.a scroll pane
+        // Add orders panel to a scroll pane
         JScrollPane scrollPane = new JScrollPane(ordersPanel);
         scrollPane.setBorder(null);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         // Back button panel
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.setBackground(UIConfig.PRIMARY_BG);
-        buttonPanel.setBorder(new EmptyBorder(20, 0, 0, 0));
+        JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        backButtonPanel.setBackground(UIConfig.PRIMARY_BG);
+        backButtonPanel.setBorder(new EmptyBorder(20, 0, 0, 0));
 
         JButton backButton = new JButton(BACK_BUTTON_TEXT);
         UIConfig.styleButton(backButton);
@@ -157,8 +217,8 @@ public class OrderPage {
             new UserHomePage(username);
         });
 
-        buttonPanel.add(backButton);
-        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+        backButtonPanel.add(backButton);
+        mainPanel.add(backButtonPanel, BorderLayout.SOUTH);
 
         // Add main panel to frame
         frame.add(mainPanel, BorderLayout.CENTER);
@@ -170,7 +230,7 @@ public class OrderPage {
 
     private static List<Order> fetchOrders(String username) {
         List<Order> orders = new ArrayList<>();
-        String sql = "SELECT p.prescription_id, o.order_status FROM prescriptions p " +
+        String sql = "SELECT p.prescription_id, o.order_status, o.total_price FROM prescriptions p " +
                 "JOIN orders o ON p.prescription_id = o.prescription_id " +
                 "JOIN users u ON p.user_id = u.user_id WHERE u.username = ?";
 
@@ -182,7 +242,8 @@ public class OrderPage {
                 while (rs.next()) {
                     int prescriptionId = rs.getInt("prescription_id");
                     String status = rs.getString("order_status");
-                    orders.add(new Order(prescriptionId, status));
+                    double totalPrice = rs.getDouble("total_price");
+                    orders.add(new Order(prescriptionId, status, totalPrice));
                 }
             }
         } catch (SQLException e) {
@@ -196,10 +257,12 @@ public class OrderPage {
     static class Order {
         private final int prescriptionId;
         private final String status;
+        private final double totalPrice;
 
-        public Order(int prescriptionId, String status) {
+        public Order(int prescriptionId, String status, double totalPrice) {
             this.prescriptionId = prescriptionId;
             this.status = status;
+            this.totalPrice = totalPrice;
         }
 
         public int getPrescriptionId() {
@@ -209,5 +272,36 @@ public class OrderPage {
         public String getStatus() {
             return status;
         }
+
+        public double getTotalPrice() {
+            return totalPrice;
+        }
+    }
+
+    /**
+     * Get the order ID associated with a prescription ID
+     *
+     * @param prescriptionId The prescription ID
+     * @return The order ID, or -1 if not found
+     */
+    private static int getOrderIdFromPrescription(int prescriptionId) {
+        String sql = "SELECT order_id FROM orders WHERE prescription_id = ?";
+
+        try (Connection conn = DBconnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, prescriptionId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("order_id");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1;
     }
 }

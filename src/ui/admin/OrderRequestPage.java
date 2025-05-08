@@ -186,7 +186,10 @@ public class OrderRequestPage {
         confirmButton.addActionListener(e -> {
             if (selectedOrderId != -1) {
                 // Open the order confirmation page
+                frame.dispose();
                 OrderConfirmationPage.showOrderConfirmation(selectedOrderId);
+                // Refresh the order request page
+                refreshOrderData();
             } else {
                 JOptionPane.showMessageDialog(frame, "Please select an order first.", "No Selection", JOptionPane.WARNING_MESSAGE);
             }
@@ -274,7 +277,7 @@ public class OrderRequestPage {
 
             // Query to get prescription image path
             String sql = "SELECT p.image_path FROM prescriptions p " +
-                    "JOIN orders o ON p.prescriptions_id = o.prescription_id " +
+                    "JOIN orders o ON p.prescription_id = o.prescription_id " +
                     "WHERE o.order_id = ?";
 
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {

@@ -8,9 +8,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
- * AdminPage provides the main dashboard for administrators.
- * It offers access to various management functions like order requests,
- * stock management, and payment management.
+ * AdminPage serves as the main dashboard for administrators.
+ * It provides access to various administrative functions.
  */
 public class AdminPage {
 
@@ -19,124 +18,130 @@ public class AdminPage {
     // Window settings
     private static final String WINDOW_TITLE = "Admin Panel - WellCure";
     private static final int WINDOW_WIDTH = 600;
-    private static final int WINDOW_HEIGHT = 400;
+    private static final int WINDOW_HEIGHT = 500;
 
     // Content settings
     private static final String TITLE_TEXT = "ADMIN PANEL";
-    private static final String ORDER_BUTTON_TEXT = "ORDER REQUESTS";
-    private static final String STOCK_BUTTON_TEXT = "MANAGE STOCK";
-    private static final String PAYMENT_BUTTON_TEXT = "MANAGE PAYMENT";
-    private static final String LOGOUT_BUTTON_TEXT = "Logout";
-
-    // Button positions
-    private static final int ORDER_BUTTON_X = 100;
-    private static final int ORDER_BUTTON_Y = 50;
-    private static final int STOCK_BUTTON_X = 350;
-    private static final int STOCK_BUTTON_Y = 50;
-    private static final int PAYMENT_BUTTON_X = 225;
-    private static final int PAYMENT_BUTTON_Y = 150;
+    private static final String ORDER_REQUESTS_TEXT = "ORDER REQUESTS";
+    private static final String MANAGE_STOCK_TEXT = "MANAGE STOCK";
+    private static final String MANAGE_PAYMENT_TEXT = "MANAGE PAYMENT";
+    private static final String PAYMENT_VERIFICATION_TEXT = "PAYMENT VERIFICATION";
+    private static final String LOGOUT_TEXT = "LOGOUT";
 
     // Button dimensions
-    private static final Dimension ADMIN_BUTTON_SIZE = new Dimension(150, 50);
+    private static final Dimension MAIN_BUTTON_SIZE = new Dimension(200, 80);
+    private static final Dimension LOGOUT_BUTTON_SIZE = new Dimension(120, 40);
+
+    // Spacing settings
+    private static final int TITLE_SPACING = 30;
+    private static final int BUTTON_SPACING = 20;
 
     /**
-     * Initializes and displays the admin dashboard.
+     * Displays the admin panel with options for managing the pharmacy.
      */
     public static void admin() {
-        JFrame adminFrame = new JFrame(WINDOW_TITLE);
-        adminFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        adminFrame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-        adminFrame.setLayout(new BorderLayout());
-        UIConfig.styleFrame(adminFrame);
+        JFrame frame = new JFrame(WINDOW_TITLE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        frame.setLayout(new BorderLayout());
+        UIConfig.styleFrame(frame);
 
         // Main panel with padding
-        JPanel mainPanel = new JPanel(new BorderLayout());
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
         mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         UIConfig.stylePanel(mainPanel);
 
-        // Top panel with title and logout button
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setBackground(UIConfig.PRIMARY_BG);
-
-        // Title panel at the center
-        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        // Title panel
+        JPanel titlePanel = new JPanel();
         titlePanel.setBackground(UIConfig.PRIMARY_BG);
+
         JLabel titleLabel = new JLabel(TITLE_TEXT);
         UIConfig.styleTitle(titleLabel);
         titlePanel.add(titleLabel);
 
-        // Logout button at the right
-        JPanel logoutPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        mainPanel.add(titlePanel, BorderLayout.NORTH);
+
+        // Buttons panel
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.setLayout(new GridLayout(2, 2, BUTTON_SPACING, BUTTON_SPACING));
+        buttonsPanel.setBackground(UIConfig.PRIMARY_BG);
+        buttonsPanel.setBorder(new EmptyBorder(TITLE_SPACING, 0, 0, 0));
+
+        JButton orderRequestsButton = new JButton(ORDER_REQUESTS_TEXT);
+        JButton manageStockButton = new JButton(MANAGE_STOCK_TEXT);
+        JButton managePaymentButton = new JButton(MANAGE_PAYMENT_TEXT);
+        JButton paymentVerificationButton = new JButton(PAYMENT_VERIFICATION_TEXT);
+
+        UIConfig.styleButton(orderRequestsButton);
+        UIConfig.styleButton(manageStockButton);
+        UIConfig.styleButton(managePaymentButton);
+        UIConfig.styleButton(paymentVerificationButton);
+
+        orderRequestsButton.setPreferredSize(MAIN_BUTTON_SIZE);
+        manageStockButton.setPreferredSize(MAIN_BUTTON_SIZE);
+        managePaymentButton.setPreferredSize(MAIN_BUTTON_SIZE);
+        paymentVerificationButton.setPreferredSize(MAIN_BUTTON_SIZE);
+
+        buttonsPanel.add(orderRequestsButton);
+        buttonsPanel.add(manageStockButton);
+        buttonsPanel.add(managePaymentButton);
+        buttonsPanel.add(paymentVerificationButton);
+
+        mainPanel.add(buttonsPanel, BorderLayout.CENTER);
+
+        // Logout button panel
+        JPanel logoutPanel = new JPanel();
         logoutPanel.setBackground(UIConfig.PRIMARY_BG);
-        JButton logoutButton = new JButton(LOGOUT_BUTTON_TEXT);
+        logoutPanel.setBorder(new EmptyBorder(BUTTON_SPACING, 0, 0, 0));
+
+        JButton logoutButton = new JButton(LOGOUT_TEXT);
         UIConfig.styleButton(logoutButton);
-        logoutButton.setSize(50 , 30);
+        logoutButton.setPreferredSize(LOGOUT_BUTTON_SIZE);
         logoutPanel.add(logoutButton);
-        topPanel.add(titlePanel, BorderLayout.CENTER);
-        topPanel.add(logoutPanel, BorderLayout.EAST);
 
-        mainPanel.add(topPanel, BorderLayout.NORTH);
-
-        // Center panel for buttons
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(null); // Using absolute positioning for precise layout
-        buttonPanel.setBackground(UIConfig.PRIMARY_BG);
-
-        // Create buttons with specific styling
-        JButton orderButton = new JButton(ORDER_BUTTON_TEXT);
-        UIConfig.styleButton(orderButton);
-        orderButton.setPreferredSize(ADMIN_BUTTON_SIZE);
-        orderButton.setSize(ADMIN_BUTTON_SIZE);
-
-        JButton stockButton = new JButton(STOCK_BUTTON_TEXT);
-        UIConfig.styleButton(stockButton);
-        stockButton.setPreferredSize(ADMIN_BUTTON_SIZE);
-        stockButton.setSize(ADMIN_BUTTON_SIZE);
-
-        JButton paymentButton = new JButton(PAYMENT_BUTTON_TEXT);
-        UIConfig.styleButton(paymentButton);
-        paymentButton.setPreferredSize(ADMIN_BUTTON_SIZE);
-        paymentButton.setSize(ADMIN_BUTTON_SIZE);
-
-        // Position buttons according to the constants
-        orderButton.setLocation(ORDER_BUTTON_X, ORDER_BUTTON_Y);
-        stockButton.setLocation(STOCK_BUTTON_X, STOCK_BUTTON_Y);
-        paymentButton.setLocation(PAYMENT_BUTTON_X, PAYMENT_BUTTON_Y);
-
-        // Add buttons to the panel
-        buttonPanel.add(orderButton);
-        buttonPanel.add(stockButton);
-        buttonPanel.add(paymentButton);
-
-        // Add button panel to main panel
-        mainPanel.add(buttonPanel, BorderLayout.CENTER);
+        mainPanel.add(logoutPanel, BorderLayout.SOUTH);
 
         // Add main panel to frame
-        adminFrame.add(mainPanel);
+        frame.add(mainPanel);
 
         // ==================== Event Handlers ====================
 
-        // Button action listeners
-        orderButton.addActionListener(e -> {
-            adminFrame.dispose();
+        // Order Requests Button Action
+        orderRequestsButton.addActionListener(e -> {
+            frame.dispose();
             OrderRequestPage.order();
         });
 
-        stockButton.addActionListener(e -> {
-            adminFrame.dispose();
+        // Manage Stock Button Action
+        manageStockButton.addActionListener(e -> {
+            frame.dispose();
             StockManagementPage.showStockManagementPage();
         });
 
-        paymentButton.addActionListener(e -> JOptionPane.showMessageDialog(adminFrame, "Payment management is not implemented yet."));
+        // Manage Payment Button Action
+        managePaymentButton.addActionListener(e -> {
+            frame.dispose();
+            // Navigate to payment management page
+            // PaymentManagementPage.showPaymentManagement();
+            JOptionPane.showMessageDialog(null, "Payment Management feature coming soon!", "Under Development", JOptionPane.INFORMATION_MESSAGE);
+            admin(); // Return to admin page for now
+        });
 
-        // Logout button action
+        // Payment Verification Button Action
+        paymentVerificationButton.addActionListener(e -> {
+            frame.dispose();
+            PaymentVerificationPage.showPaymentVerification();
+        });
+
+        // Logout Button Action
         logoutButton.addActionListener(e -> {
-            adminFrame.dispose();
+            frame.dispose();
             new StartWindow();
         });
 
-        // Center the frame on screen and make it visible
-        adminFrame.setLocationRelativeTo(null);
-        adminFrame.setVisible(true);
+        // Display the frame
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }
 }
