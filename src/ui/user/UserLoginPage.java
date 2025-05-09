@@ -20,7 +20,7 @@ public class UserLoginPage {
     private static final String WINDOW_TITLE = "User Login - WellCure";
     private static final int WINDOW_WIDTH = 390;
     private static final int WINDOW_HEIGHT = 500;
-    
+
     // Colors
     private static final Color BG_COLOR = Color.WHITE;
     private static final Color TEXT_COLOR = Color.BLACK;
@@ -29,7 +29,7 @@ public class UserLoginPage {
     private static final Color BUTTON_FG = new Color(255, 255, 255);
     private static final Color FIELD_BORDER = new Color(220, 220, 220);
     private static final Color BACK_COLOR = new Color(70, 70, 70);
-    
+
     // Content
     private static final String TITLE_TEXT = "User Login";
     private static final String SUBTITLE_TEXT = "Sign in to continue.";
@@ -38,7 +38,8 @@ public class UserLoginPage {
     private static final String LOGIN_BUTTON_TEXT = "Log in";
     private static final String REGISTER_BUTTON_TEXT = "Register";
     private static final String BACK_BUTTON_TEXT = "<--";
-    
+    private static final String BACK_ICON_PATH = "outside thigs/U_back.png";  // Path to back icon image
+
     // Component positions - Adjust these to change the layout
     private static final int BACK_BUTTON_X = 20;
     private static final int BACK_BUTTON_Y = 20;
@@ -50,7 +51,7 @@ public class UserLoginPage {
     private static final int PASSWORD_FIELD_Y = 245;
     private static final int LOGIN_BUTTON_Y = 320;
     private static final int REGISTER_BUTTON_Y = 385;
-    
+
     // Component dimensions
     private static final int FIELD_WIDTH = 220;
     private static final int FIELD_HEIGHT = 40;
@@ -68,66 +69,77 @@ public class UserLoginPage {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null); // Use null layout for direct positioning
         frame.getContentPane().setBackground(BG_COLOR);
-        
+
         // Back button at top left
-        JButton backButton = new JButton(BACK_BUTTON_TEXT);
-        backButton.setFont(new Font("Arial", Font.BOLD, 16));
-        backButton.setForeground(BACK_COLOR);
+        JButton backButton = new JButton();
+        try {
+            ImageIcon backIcon = new ImageIcon(BACK_ICON_PATH);
+            // Resize the icon to fit the button
+            Image img = backIcon.getImage();
+            Image resizedImg = img.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+            backButton.setIcon(new ImageIcon(resizedImg));
+        } catch (Exception e) {
+            // Fallback to text if image can't be loaded
+            backButton.setText(BACK_BUTTON_TEXT);
+            backButton.setFont(new Font("Arial", Font.BOLD, 16));
+            backButton.setForeground(BACK_COLOR);
+            System.out.println("Error loading back icon: " + e.getMessage());
+        }
         backButton.setBackground(BG_COLOR);
         backButton.setBorderPainted(false);
         backButton.setFocusPainted(false);
         backButton.setContentAreaFilled(false);
-        backButton.setBounds(BACK_BUTTON_X, BACK_BUTTON_Y, 30, 30);
+        backButton.setBounds(BACK_BUTTON_X, BACK_BUTTON_Y, 40, 40);
         frame.add(backButton);
-        
+
         // Title
         JLabel titleLabel = new JLabel(TITLE_TEXT, JLabel.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 32));
         titleLabel.setForeground(TEXT_COLOR);
         titleLabel.setBounds(0, TITLE_Y, WINDOW_WIDTH, 40);
         frame.add(titleLabel);
-        
+
         // Subtitle
         JLabel subtitleLabel = new JLabel(SUBTITLE_TEXT, JLabel.CENTER);
         subtitleLabel.setFont(new Font("Arial", Font.PLAIN, 17));
         subtitleLabel.setForeground(SECONDARY_TEXT_COLOR);
         subtitleLabel.setBounds(0, SUBTITLE_Y, WINDOW_WIDTH, 25);
         frame.add(subtitleLabel);
-        
+
         // Username label
         JLabel usernameLabel = new JLabel(USERNAME_LABEL);
         usernameLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         usernameLabel.setForeground(SECONDARY_TEXT_COLOR);
         usernameLabel.setBounds((WINDOW_WIDTH - FIELD_WIDTH)/2, USERNAME_LABEL_Y, FIELD_WIDTH, 20);
         frame.add(usernameLabel);
-        
+
         // Username field
         JTextField usernameField = createRoundedTextField();
         usernameField.setBounds((WINDOW_WIDTH - FIELD_WIDTH)/2, USERNAME_FIELD_Y, FIELD_WIDTH, FIELD_HEIGHT);
         frame.add(usernameField);
-        
+
         // Password label
         JLabel passwordLabel = new JLabel(PASSWORD_LABEL);
         passwordLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         passwordLabel.setForeground(SECONDARY_TEXT_COLOR);
         passwordLabel.setBounds((WINDOW_WIDTH - FIELD_WIDTH)/2, PASSWORD_LABEL_Y, FIELD_WIDTH, 20);
         frame.add(passwordLabel);
-        
+
         // Password field
         JPasswordField passwordField = createRoundedPasswordField();
         passwordField.setBounds((WINDOW_WIDTH - FIELD_WIDTH)/2, PASSWORD_FIELD_Y, FIELD_WIDTH, FIELD_HEIGHT);
         frame.add(passwordField);
-        
+
         // Login button
         JButton loginButton = createRoundedButton(LOGIN_BUTTON_TEXT);
         loginButton.setBounds((WINDOW_WIDTH - BUTTON_WIDTH)/2, LOGIN_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
         frame.add(loginButton);
-        
+
         // Register button
         JButton registerButton = createRoundedButton(REGISTER_BUTTON_TEXT);
         registerButton.setBounds((WINDOW_WIDTH - BUTTON_WIDTH)/2, REGISTER_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
         frame.add(registerButton);
-        
+
         // Event handlers
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -139,7 +151,7 @@ public class UserLoginPage {
                     JOptionPane.showMessageDialog(frame, "Please fill all the fields", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                
+
                 if (UserController.loginvalid(username, password)) {
                     JOptionPane.showMessageDialog(frame, "Login Successful", "Success", JOptionPane.INFORMATION_MESSAGE);
                     new UserHomePage(username);
@@ -158,7 +170,7 @@ public class UserLoginPage {
                 frame.dispose(); // Close login window
             }
         });
-        
+
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -172,7 +184,7 @@ public class UserLoginPage {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-    
+
     /**
      * Creates ui.user.a text field with rounded corners.
      */
@@ -189,7 +201,7 @@ public class UserLoginPage {
                 }
                 super.paintComponent(g);
             }
-            
+
             @Override
             protected void paintBorder(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
@@ -199,14 +211,14 @@ public class UserLoginPage {
                 g2.dispose();
             }
         };
-        
+
         textField.setOpaque(false);
         textField.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         textField.setFont(new Font("Arial", Font.PLAIN, 14));
-        
+
         return textField;
     }
-    
+
     /**
      * Creates ui.user.a password field with rounded corners.
      */
@@ -223,7 +235,7 @@ public class UserLoginPage {
                 }
                 super.paintComponent(g);
             }
-            
+
             @Override
             protected void paintBorder(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
@@ -233,14 +245,14 @@ public class UserLoginPage {
                 g2.dispose();
             }
         };
-        
+
         passwordField.setOpaque(false);
         passwordField.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         passwordField.setFont(new Font("Arial", Font.PLAIN, 14));
-        
+
         return passwordField;
     }
-    
+
     /**
      * Creates ui.user.a button with rounded corners.
      */
@@ -250,29 +262,29 @@ public class UserLoginPage {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                
+
                 // Paint rounded background
                 g2.setColor(getBackground());
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), CORNER_RADIUS, CORNER_RADIUS);
-                
+
                 // Paint text
                 g2.setColor(getForeground());
                 FontMetrics fm = g2.getFontMetrics();
                 int textX = (getWidth() - fm.stringWidth(getText())) / 2;
                 int textY = (getHeight() - fm.getHeight()) / 2 + fm.getAscent();
                 g2.drawString(getText(), textX, textY);
-                
+
                 g2.dispose();
             }
         };
-        
+
         button.setFont(new Font("Arial", Font.BOLD, 14));
         button.setBackground(BUTTON_BG);
         button.setForeground(BUTTON_FG);
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
-        
+
         return button;
     }
 }

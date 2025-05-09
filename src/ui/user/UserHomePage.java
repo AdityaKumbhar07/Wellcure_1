@@ -35,7 +35,7 @@ public class UserHomePage {
     private static final Color TABLE_HEADER_FG = new Color(50, 50, 50);
 
     // Fonts - Customize these to change the text appearance
-    private static final Font TITLE_FONT = new Font("Arial", Font.BOLD, 24);
+    private static final Font TITLE_FONT = new Font("Arial", Font.BOLD, 32); // Increased from 24 to 32
     private static final Font SUBTITLE_FONT = new Font("Arial", Font.BOLD, 18);
     private static final Font BUTTON_FONT = new Font("Arial", Font.BOLD, 14);
     private static final Font REGULAR_FONT = new Font("Arial", Font.PLAIN, 14);
@@ -50,6 +50,7 @@ public class UserHomePage {
     private static final String LOGOUT_TEXT = "Logout";
     private static final String HELP_TEXT = "Help";
     private static final String NOTE_TEXT = "Note: This list is for information only. To order, please upload ui.user.a prescription.";
+    private static final String APP_LOGO_PATH = "outside thigs/App logo.png";  // Path to app logo image
 
     // Component dimensions
     private static final int BUTTON_WIDTH = 200;
@@ -120,11 +121,28 @@ public class UserHomePage {
         mainPanel.setLayout(null); // Use null layout for absolute positioning
         mainPanel.setBackground(BG_COLOR);
 
-        // Title at the top
+        // App logo at top left
+        JLabel logoLabel = new JLabel();
+        try {
+            ImageIcon logoIcon = new ImageIcon(APP_LOGO_PATH);
+            // Resize the icon to fit nicely
+            Image img = logoIcon.getImage();
+            Image resizedImg = img.getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+            logoLabel.setIcon(new ImageIcon(resizedImg));
+        } catch (Exception e) {
+            // Fallback if image can't be loaded
+            logoLabel.setText("LOGO");
+            logoLabel.setFont(new Font("Arial", Font.BOLD, 14));
+            System.out.println("Error loading app logo: " + e.getMessage());
+        }
+        logoLabel.setBounds(20, 10, 60, 60);
+        mainPanel.add(logoLabel);
+
+        // Title at the top - centered but shifted right to accommodate logo
         JLabel titleLabel = new JLabel(TITLE_TEXT, JLabel.CENTER);
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(TEXT_COLOR);
-        titleLabel.setBounds(0, 20, WINDOW_WIDTH, 40);
+        titleLabel.setBounds(80, 20, WINDOW_WIDTH - 100, 40);
         mainPanel.add(titleLabel);
 
         // Create navigation buttons

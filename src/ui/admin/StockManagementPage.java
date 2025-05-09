@@ -65,6 +65,7 @@ public class StockManagementPage {
     private static final String UPDATE_BUTTON_TEXT = "Update Medicine";
     private static final String DELETE_BUTTON_TEXT = "Delete Medicine";
     private static final String BACK_BUTTON_TEXT = "Back to Admin Panel";
+    private static final String BACK_ICON_PATH = "outside thigs/U_back.png";  // Path to back icon image
 
     // Button dimensions
     private static final Dimension ACTION_BUTTON_SIZE = new Dimension(180, 40);
@@ -143,8 +144,8 @@ public class StockManagementPage {
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(UIConfig.PRIMARY_BG);
         contentPanel.setBorder(BorderFactory.createCompoundBorder(
-            UIConfig.ROUNDED_BORDER,
-            new EmptyBorder(10, 10, 10, 10)
+                UIConfig.ROUNDED_BORDER,
+                new EmptyBorder(10, 10, 10, 10)
         ));
 
         // Add ui.user.a placeholder message
@@ -162,7 +163,20 @@ public class StockManagementPage {
         bottomPanel.setBackground(UIConfig.PRIMARY_BG);
         bottomPanel.setBorder(new EmptyBorder(20, 0, 0, 0));
 
-        JButton backButton = createStyledButton(BACK_BUTTON_TEXT);
+        JButton backButton = new JButton();
+        try {
+            ImageIcon backIcon = new ImageIcon(BACK_ICON_PATH);
+            // Resize the icon to fit the button
+            Image img = backIcon.getImage();
+            Image resizedImg = img.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+            backButton.setIcon(new ImageIcon(resizedImg));
+        } catch (Exception e) {
+            // Fallback to text if image can't be loaded
+            backButton.setText(BACK_BUTTON_TEXT);
+            System.out.println("Error loading back icon: " + e.getMessage());
+        }
+        UIConfig.styleButton(backButton);
+        backButton.setPreferredSize(new Dimension(50, 40));
         backButton.addActionListener(e -> {
             stockFrame.dispose();
             AdminPage.admin();

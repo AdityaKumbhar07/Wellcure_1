@@ -8,7 +8,8 @@ create table users(
     name varchar(100),
     username varchar(20) unique,
     password varchar(20),
-    address varchar(100)
+    address varchar(100),
+    email varchar(100)
 );
 
 -- create medicine table
@@ -21,7 +22,7 @@ create table medicines(
 );
 
 CREATE TABLE prescriptions (
-    prescriptions_id INT AUTO_INCREMENT PRIMARY KEY,
+    prescription_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     image_path VARCHAR(300),
     status VARCHAR(50),
@@ -34,6 +35,8 @@ CREATE TABLE orders (
     user_id INT,
     prescription_id INT,
     order_status VARCHAR(50),
+    order_mode varchar(50),
+    total_price DOUBLE DEFAULT 0.0,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (prescription_id) REFERENCES prescriptions(prescription_id)
 );

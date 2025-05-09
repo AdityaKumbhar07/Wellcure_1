@@ -7,10 +7,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="mysql-connector-j-9.2.0" level="project" />
     <orderEntry type="library" name="core-3.5.3" level="project" />
     <orderEntry type="library" name="javase-3.5.3" level="project" />
-    <orderEntry type="library" name="core-3.5.3 (1)" level="project" />
-    <orderEntry type="library" name="javase-3.5.3 (1)" level="project" />
+    <orderEntry type="library" name="xmlbeans-5.1.1" level="project" />
+    <orderEntry type="library" name="mysql-connector-j-9.2.0" level="project" />
   </component>
 </module>

@@ -197,7 +197,7 @@ public class PaymentSelectionPage {
                     updateOrderPaymentMethod("UPI");
 
                     // Generate and show UPI QR code
-                     UPIPaymentPage.showUPIPaymentPage(orderId, totalAmount, username);
+                    UPIPaymentPage.showUPIPaymentPage(orderId, totalAmount, username);
                     frame.dispose();
                 }
             }

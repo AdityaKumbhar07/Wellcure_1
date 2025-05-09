@@ -26,6 +26,7 @@ public class PaymentVerificationPage {
     private static final String GO_BACK_TEXT = "GO BACK";
     private static final String VERIFY_PAYMENT_TEXT = "Verify Payment";
     private static final String REJECT_PAYMENT_TEXT = "Reject Payment";
+    private static final String BACK_ICON_PATH = "outside thigs/U_back.png";  // Path to back icon image
 
     // Table settings
     private static final String[] COLUMN_NAMES = {"Order ID", "Payment Method", "Transaction ID", "Amount", "Status"};
@@ -86,9 +87,20 @@ public class PaymentVerificationPage {
         topPanel.setBorder(new EmptyBorder(10, 0, 20, 0));
         topPanel.setBackground(UIConfig.PRIMARY_BG);
 
-        JButton goBackButton = new JButton(GO_BACK_TEXT);
+        JButton goBackButton = new JButton();
+        try {
+            ImageIcon backIcon = new ImageIcon(BACK_ICON_PATH);
+            // Resize the icon to fit the button
+            Image img = backIcon.getImage();
+            Image resizedImg = img.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+            goBackButton.setIcon(new ImageIcon(resizedImg));
+        } catch (Exception e) {
+            // Fallback to text if image can't be loaded
+            goBackButton.setText(GO_BACK_TEXT);
+            System.out.println("Error loading back icon: " + e.getMessage());
+        }
         UIConfig.styleButton(goBackButton);
-        goBackButton.setPreferredSize(new Dimension(120, 40));
+        goBackButton.setPreferredSize(new Dimension(50, 40));
         JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         backButtonPanel.setBackground(UIConfig.PRIMARY_BG);
         backButtonPanel.add(goBackButton);

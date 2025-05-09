@@ -92,14 +92,14 @@ public class PaymentPage {
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    if (updateOrderStatus(prescriptionId, "Pending")) {
-                        JOptionPane.showMessageDialog(frame,
-                                "Order Request has been send!",
-                                "Order Sent", JOptionPane.INFORMATION_MESSAGE);
-                        frame.dispose();
-                        // Return to user home page
-                        new UserHomePage(username);
-                    }
+                if (updateOrderStatus(prescriptionId, "Pending")) {
+                    JOptionPane.showMessageDialog(frame,
+                            "Order Request has been send!",
+                            "Order Sent", JOptionPane.INFORMATION_MESSAGE);
+                    frame.dispose();
+                    // Return to user home page
+                    new UserHomePage(username);
+                }
             }
         });
 

@@ -435,18 +435,9 @@ public class OrderConfirmationPage {
             }
 
             // 2. Add order items and update stock
-//            String insertItemSql = "INSERT INTO order_items (order_id, medicine_id, medicine_price, quantity) VALUES (?, ?, ?, ?)";
             String updateStockSql = "UPDATE medicines SET stock = stock - ? WHERE medicine_id = ?";
 
             for (OrderItem item : selectedItems) {
-                // Insert order item
-//                try (PreparedStatement stmt = conn.prepareStatement(insertItemSql)) {
-//                    stmt.setInt(1, orderId);
-//                    stmt.setInt(2, item.getMedicine().getId());
-//                    stmt.setDouble(3, item.getMedicine().getPrice());
-//                    stmt.setInt(4, item.getQuantity());
-//                    stmt.executeUpdate();
-//                }
 
                 // Update stock
                 try (PreparedStatement stmt = conn.prepareStatement(updateStockSql)) {
@@ -467,7 +458,8 @@ public class OrderConfirmationPage {
             frame.dispose();
 
             // Refresh the order request page
-//            OrderRequestPage.refreshOrderData();
+            OrderRequestPage.refreshOrderData();
+            OrderRequestPage.order();
 
         } catch (SQLException e) {
             // Rollback transaction on error

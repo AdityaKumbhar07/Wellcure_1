@@ -28,6 +28,7 @@ public class OrderRequestPage {
     private static final String VIEW_PRESCRIPTION_TEXT = "View Prescription";
     private static final String CONFIRM_ORDER_TEXT = "Confirm Order";
     private static final String REJECT_ORDER_TEXT = "Reject Order";
+    private static final String BACK_ICON_PATH = "outside thigs/U_back.png";  // Path to back icon image
 
     // Table settings
     private static final String[] COLUMN_NAMES = {"Order No", "Order", "Total Price", "Status"};
@@ -95,9 +96,20 @@ public class OrderRequestPage {
         topPanel.setBorder(new EmptyBorder(10, 0, 20, 0));
         topPanel.setBackground(UIConfig.PRIMARY_BG);
 
-        JButton goBackButton = new JButton(GO_BACK_TEXT);
+        JButton goBackButton = new JButton();
+        try {
+            ImageIcon backIcon = new ImageIcon(BACK_ICON_PATH);
+            // Resize the icon to fit the button
+            Image img = backIcon.getImage();
+            Image resizedImg = img.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+            goBackButton.setIcon(new ImageIcon(resizedImg));
+        } catch (Exception e) {
+            // Fallback to text if image can't be loaded
+            goBackButton.setText(GO_BACK_TEXT);
+            System.out.println("Error loading back icon: " + e.getMessage());
+        }
         UIConfig.styleButton(goBackButton);
-        goBackButton.setPreferredSize(new Dimension(120, 40));
+        goBackButton.setPreferredSize(new Dimension(50, 40));
 
         JLabel titleLabel = new JLabel(TITLE_TEXT, SwingConstants.CENTER);
         UIConfig.styleTitle(titleLabel);
@@ -188,6 +200,7 @@ public class OrderRequestPage {
                 // Open the order confirmation page
                 frame.dispose();
                 OrderConfirmationPage.showOrderConfirmation(selectedOrderId);
+
                 // Refresh the order request page
                 refreshOrderData();
             } else {

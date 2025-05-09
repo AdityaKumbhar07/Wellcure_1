@@ -16,7 +16,7 @@ public class StartWindow {
     private static final String WINDOW_TITLE = "Welcome to WellCure";
     private static final int WINDOW_WIDTH = 365;
     private static final int WINDOW_HEIGHT = 350;
-    
+
     // Colors
     private static final Color BG_COLOR = Color.WHITE;
     private static final Color TEXT_COLOR = Color.BLACK;
@@ -24,12 +24,12 @@ public class StartWindow {
     private static final Color BUTTON_FG = new Color(255, 255, 255);
     private static final Color EXIT_COLOR = new Color(70, 70, 70);
     private static final Color EXIT_HOVER_COLOR = Color.RED;
-    
+
     // Content
     private static final String TITLE_TEXT = "Wellcure";
     private static final String USER_BUTTON_TEXT = "User Login";
     private static final String ADMIN_BUTTON_TEXT = "Admin Login";
-    private static final String EXIT_ICON = "X";  //"⏻"
+    private static final String EXIT_ICON_PATH = "outside thigs/back_button.png";  // Path to exit icon image
 
     /**
      * Constructor for the StartWindow class.
@@ -41,44 +41,55 @@ public class StartWindow {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null); // Use null layout for direct positioning
         frame.getContentPane().setBackground(BG_COLOR);
-        
+
         // Exit icon at top left
-        JLabel exitLabel = new JLabel(EXIT_ICON);
-        exitLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        exitLabel.setForeground(EXIT_COLOR);
-        exitLabel.setBounds(20, 10, 30, 30); // x, y, width, height
+        JLabel exitLabel = new JLabel();
+        try {
+            ImageIcon exitIcon = new ImageIcon(EXIT_ICON_PATH);
+            // Resize the icon to fit the label
+            Image img = exitIcon.getImage();
+            Image resizedImg = img.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+            exitLabel.setIcon(new ImageIcon(resizedImg));
+        } catch (Exception e) {
+            // Fallback to text if image can't be loaded
+            exitLabel.setText("X");
+            exitLabel.setFont(new Font("Arial", Font.BOLD, 20));
+            exitLabel.setForeground(EXIT_COLOR);
+            System.out.println("Error loading exit icon: " + e.getMessage());
+        }
+        exitLabel.setBounds(10, 10, 50, 50); // x, y, width, height
         frame.add(exitLabel);
-        
+
         // Title - positioned directly where you want it
         JLabel titleLabel = new JLabel(TITLE_TEXT, JLabel.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 32));
         titleLabel.setForeground(TEXT_COLOR);
         titleLabel.setBounds(0, 60, WINDOW_WIDTH, 40); // Positioned higher up
         frame.add(titleLabel);
-        
+
         // User Login button
         JButton userButton = new JButton(USER_BUTTON_TEXT);
         styleButton(userButton);
         userButton.setBounds((WINDOW_WIDTH - 250)/2, 150, 250, 50); // Centered horizontally
         frame.add(userButton);
-        
+
         // Admin Login button
         JButton adminButton = new JButton(ADMIN_BUTTON_TEXT);
         styleButton(adminButton);
         adminButton.setBounds((WINDOW_WIDTH - 250)/2, 220, 250, 50); // Centered horizontally
         frame.add(adminButton);
-        
+
         // Event handlers
         userButton.addActionListener(e -> {
             UserLoginPage.login();
             frame.setVisible(false);
         });
-        
+
         adminButton.addActionListener(e -> {
             AdminLoginPage.adminlogin();
             frame.setVisible(false);
         });
-        
+
         exitLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -89,27 +100,27 @@ public class StartWindow {
                     System.exit(0);
                 }
             }
-            
+
             @Override
             public void mouseEntered(MouseEvent e) {
                 exitLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 exitLabel.setForeground(EXIT_HOVER_COLOR);
             }
-            
+
             @Override
             public void mouseExited(MouseEvent e) {
                 exitLabel.setForeground(EXIT_COLOR);
             }
         });
-        
+
         // Display the window
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-    
+
     /**
      * Apply styling to ui.user.a button
-     * 
+     *
      * @param button The button to style
      */
     private void styleButton(JButton button) {
@@ -117,7 +128,7 @@ public class StartWindow {
         button.setBackground(BUTTON_BG);
         button.setForeground(BUTTON_FG);
         button.setFocusPainted(false);
-        
+
         // Add rounded corners
         button.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true),
